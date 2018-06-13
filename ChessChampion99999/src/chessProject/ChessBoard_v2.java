@@ -153,8 +153,8 @@ public class ChessBoard_v2{
 				.forEach(c -> c.placeThreats(this.chessBoard)));
 	}
 	
-	public void getInput(int x , int y) {
-		if (!highlighting && highlightContainsTuple(new int[]{x,y})) {
+	public void getInput(int x, int y) {
+		if (!highlighting && highlightContainsTuple(x,y)) {
 			updateBoard(highlightedPiece,x, y);
 		}
 		else if (chessBoard[x][y] != null && chessBoard[x][y].isWhitePiece() == whiteToMove) {
@@ -170,9 +170,9 @@ public class ChessBoard_v2{
 	}
 			
 	
-	private boolean highlightContainsTuple(int[] input) {
+	private boolean highlightContainsTuple(int x, int y) {
 		for (int[] tuple : highlights) {
-			if (tuple[0] == input[0] && tuple[1] == input[1]) {
+			if (tuple[0] == x && tuple[1] == y) {
 				return true;
 			}
 		}
@@ -540,5 +540,5 @@ public class ChessBoard_v2{
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
 	}
-
+	
 }
