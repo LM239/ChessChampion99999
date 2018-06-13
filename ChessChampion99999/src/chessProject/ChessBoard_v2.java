@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class ChessBoard_v2{	
 	private boolean isFinished = false;
@@ -12,6 +14,7 @@ public class ChessBoard_v2{
 	private boolean highlighting  = true;
 	private chessPiece whiteKing, blackKing;
 	private String summary = "";
+	private String moveString = "";
 	private boolean inCheck = false;
 	private boolean mustMoveKing = false;
 	private chessPiece checkingEnemy = null;
@@ -34,7 +37,8 @@ public class ChessBoard_v2{
 			
 			
 	private void updateBoard(chessPiece piece, int x, int y) {
-		if (piece.legalMove(x,y)) {		
+		if (piece.legalMove(x,y)) {
+			moveString = getMoveString(piece,x,y);
 			if (piece instanceof King && Math.abs(piece.getXCoordinate() - x) == 2) {
 				int currentX = piece.getXCoordinate();
 				int currentY = piece.getYCoordinate();
@@ -64,12 +68,20 @@ public class ChessBoard_v2{
 			highlightedPiece = null;
 			checkingEnemy = null;
 			
-			summary += (whiteToMove ? "White to move\n" : "Black to move\n") + this.toString() + "\n\n";
+			boolean surrounded = surrounded();
+			boolean mustMoveKing = mustMoveKing();
 			
-			if (mustMoveKing() && surrounded()) {
+			if (inCheck) {
+				moveString += surrounded && mustMoveKing ? "#" : "+";
+			}
+			
+			summary += moveString + "\n" + (whiteToMove ? "White to move\n" : "Black to move\n") + this.toString() + "\n\n";
+			
+			if (mustMoveKing && surrounded) {
 				this.isFinished = true;
 				summary += "Check Mate!\n" + (whiteToMove ? "Black" : "White") + " wins!\nCongratulations!\n";
 			}
+			moveString = "";
 		} 
 		else {
 			summary += "Invalid move\n\n";
@@ -77,6 +89,63 @@ public class ChessBoard_v2{
 	}
 
 			
+	private String getMoveString(chessPiece piece, int x, int y) {
+		String result = "";
+		if (piece instanceof Pawn) {
+			if (chessBoard[x][y] != null) {
+				result = Character.toString(("abcdefgh".charAt(piece.getXCoordinate()))) + "x";
+			}
+			result += Character.toString(("abcdefgh".charAt(x))) + Integer.toString(y+1);
+			
+			if (y == 0 || y == 7) {
+				result += "=Q";
+			}
+			return result;
+		}
+		Predicate<chessPiece> g = null;
+		if (piece instanceof Knight) {
+			g = (a-> a instanceof Knight);
+			result = "N";
+		} 
+		else if(piece instanceof Bishop) {
+			g = (a-> a instanceof Bishop);
+			result = "B";
+		}
+		else if(piece instanceof Queen) {
+			g = (a-> a instanceof Queen);
+			result = "Q";
+		}
+		else if(piece instanceof Rook) {
+			g = (a-> a instanceof Rook);
+			result = "R";
+		}
+		else if(piece instanceof King) {
+			if (Math.abs(piece.getXCoordinate() - x) == 2) {
+				return x > piece.getXCoordinate() ? "O-O" : "O-O-O";
+			}
+			g = (a -> false);
+			result = "K";
+		}
+		
+		try {
+			chessPiece clone = threatBoard.get(x).get(y).stream().filter(g).filter(p -> p != piece && p.isWhitePiece() == whiteToMove).findFirst().get();
+			if (clone.getXCoordinate() == piece.getXCoordinate()) {
+				result += Integer.toString(piece.getYCoordinate() +1);
+			} 
+			else {
+				result += Character.toString(("abcdefgh".charAt(piece.getXCoordinate())));
+			}
+		} catch (NoSuchElementException e) {
+		
+		}
+		if (chessBoard[x][y] != null) {
+			result += "x";
+		}
+		
+		return result + Character.toString(("abcdefgh".charAt(x))) + Integer.toString(y+1);
+	}
+
+
 	private void updateThreatBoard() {
 		threatBoard.stream().forEach(a -> a.stream().forEach(Set::clear));
 		
@@ -84,14 +153,14 @@ public class ChessBoard_v2{
 				.forEach(c -> c.placeThreats(this.chessBoard)));
 	}
 	
-	public void getInput(int[] input) {
-		if (!highlighting && highlightContainsTuple(input)) {
-			updateBoard(highlightedPiece,input[0], input[1]);
+	public void getInput(int x , int y) {
+		if (!highlighting && highlightContainsTuple(new int[]{x,y})) {
+			updateBoard(highlightedPiece,x, y);
 		}
-		else if (chessBoard[input[0]][input[1]] != null && chessBoard[input[0]][input[1]].isWhitePiece() == whiteToMove) {
+		else if (chessBoard[x][y] != null && chessBoard[x][y].isWhitePiece() == whiteToMove) {
 			highlights.clear();
-			saveHiglights(chessBoard[input[0]][input[1]]);
-			highlightedPiece = chessBoard[input[0]][input[1]];
+			saveHiglights(chessBoard[x][y]);
+			highlightedPiece = chessBoard[x][y];
 			highlighting = false;
 		}
 		else {
@@ -471,116 +540,5 @@ public class ChessBoard_v2{
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
 	}
-	
-	public static void main(String[] args) {
-		ChessBoard_v2 game = new ChessBoard_v2(null);
-		/*game.getInput(new int[]{4,1});
-		game.getInput(new int[]{4,2});
-		game.getInput(new int[]{6,7});
-		game.getInput(new int[]{5,5});
-		game.getInput(new int[]{3,0});
-		game.getInput(new int[]{7,4});
-		game.getInput(new int[]{4,6});
-		game.getInput(new int[]{4,4});
-		game.getInput(new int[]{7,4});
-		game.getInput(new int[]{7,5});
-		game.getInput(new int[]{4,7});
-		game.getInput(new int[]{4,6});
-		game.getInput(new int[]{3,1});
-		game.getInput(new int[]{3,2});
-		game.getInput(new int[]{4,6});
-		game.getInput(new int[]{4,5});
-		game.getInput(new int[]{2,1});
-		game.getInput(new int[]{2,2});
-		game.getInput(new int[]{5,5});*/
-		
-		/*game.getInput(new int[]{5,1});
-		game.getInput(new int[]{5,2});
-		game.getInput(new int[]{4,6});
-		game.getInput(new int[]{4,5});
-		game.getInput(new int[]{7,1});
-		game.getInput(new int[]{7,3});
-		game.getInput(new int[]{3,7});
-		game.getInput(new int[]{7,3});
-		game.getInput(new int[]{7,0});*/
-		
-		/*game.getInput(new int[]{3,1});
-		game.getInput(new int[]{3,3});
-		game.getInput(new int[]{2,6});
-		game.getInput(new int[]{2,4});
-		game.getInput(new int[]{7,1});
-		game.getInput(new int[]{7,2});
-		game.getInput(new int[]{3,7});
-		game.getInput(new int[]{0,4});
-		game.getInput(new int[]{1,1});
-		game.getInput(new int[]{1,3});
-		game.getInput(new int[]{1,7});
-		game.getInput(new int[]{2,5});
-		game.getInput(new int[]{7,2});
-		game.getInput(new int[]{7,3});
-		game.getInput(new int[]{2,5});
-		game.getInput(new int[]{1,3});
-		game.getInput(new int[]{7,3});
-		game.getInput(new int[]{7,4});
-		game.getInput(new int[]{1,3});
-		game.getInput(new int[]{2,1});*/
-		
-		/*game.getInput(new int[]{6,1});
-		game.getInput(new int[]{6,2});
-		game.getInput(new int[]{3,6});
-		game.getInput(new int[]{3,5});
-		game.getInput(new int[]{5,0});
-		game.getInput(new int[]{6,1});
-		game.getInput(new int[]{2,7});
-		game.getInput(new int[]{4,5});
-		game.getInput(new int[]{6,0});
-		game.getInput(new int[]{5,2});
-		game.getInput(new int[]{1,7});
-		game.getInput(new int[]{2,5});
-		game.getInput(new int[]{4,0});
-		game.getInput(new int[]{6,0});*/
-		
-		/*game.getInput(new int[]{4,1});
-		game.getInput(new int[]{4,3});
-		game.getInput(new int[]{3,6});
-		game.getInput(new int[]{3,4});
-		game.getInput(new int[]{4,3});
-		game.getInput(new int[]{3,4});
-		game.getInput(new int[]{3,7});
-		game.getInput(new int[]{3,4});
-		game.getInput(new int[]{3,1});
-		game.getInput(new int[]{3,3});
-		game.getInput(new int[]{4,7});
-		game.getInput(new int[]{3,7});
-		game.getInput(new int[]{3,0});
-		game.getInput(new int[]{3,2});
-		game.getInput(new int[]{3,4});*/
-		
-		/*game.getInput(new int[]{4,1});
-		game.getInput(new int[]{4,3});
-		game.getInput(new int[]{4,6});
-		game.getInput(new int[]{4,4});
-		
-		game.getInput(new int[]{3,0});
-		game.getInput(new int[]{7,4});
-		game.getInput(new int[]{3,7});
-		game.getInput(new int[]{7,3});
-		game.getInput(new int[]{7,4});
-		game.getInput(new int[]{4,4});
-		game.getInput(new int[]{7,3});
-		game.getInput(new int[]{4,6});
-		game.getInput(new int[]{4,4});
-		game.getInput(new int[]{3,3});*/
-		
 
-		game.getInput(new int[]{4,1});
-		game.getInput(new int[]{4,3});
-		game.getInput(new int[]{5,6});
-		game.getInput(new int[]{5,4});
-		game.getInput(new int[]{3,0});
-		game.getInput(new int[]{7,4});
-		game.getInput(new int[]{6,6});
-		
-		
-	}
 }
