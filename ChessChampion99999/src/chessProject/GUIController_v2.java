@@ -146,8 +146,6 @@ public class GUIController_v2 {
 	@FXML StackPane sixzero;
 	@FXML StackPane sevenzero;
 	
-	@FXML AnchorPane contentBox;
-	
 	Image nothing;
 
 	ChessBoard_v2 game;

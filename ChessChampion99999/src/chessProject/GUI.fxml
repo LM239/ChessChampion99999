@@ -9,7 +9,7 @@
 
 <HBox alignment="CENTER" prefHeight="536.0" prefWidth="760.0" spacing="15" style="-fx-padding: 10px 10px 10px 10px" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chessProject.GUIController_v2">
    <children>
-    <AnchorPane fx:id="contentBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="516.0" prefWidth="516.0" style="-fx-background-color: BLACK;">
+    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="516.0" prefWidth="516.0" style="-fx-background-color: BLACK;">
          <children>
             <AnchorPane layoutX="2.0" layoutY="2.0" prefHeight="64.0" prefWidth="512.0">
                <children>
