@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER" prefHeight="536.0" prefWidth="760.0" spacing="15" style="-fx-padding: 10px 10px 10px 10px" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chessProject.GUIController_v2">
+   <children>
+    <AnchorPane fx:id="contentBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="516.0" prefWidth="516.0" style="-fx-background-color: BLACK;">
+         <children>
+            <AnchorPane layoutX="2.0" layoutY="2.0" prefHeight="64.0" prefWidth="512.0">
+               <children>
+                  <StackPane fx:id="zeroseven" layoutX="0.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="izeroseven" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="oneseven" layoutX="64.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ioneseven" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="twoseven" layoutX="128.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="itwoseven" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="threeseven" layoutX="192.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ithreeseven" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fourseven" layoutX="256.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ifourseven" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fiveseven" layoutX="320.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ifiveseven" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sixseven" layoutX="384.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="isixseven" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sevenseven" layoutX="448.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="isevenseven" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="2.0" layoutY="66.0" prefHeight="64.0" prefWidth="512.0">
+               <children>
+                  <StackPane fx:id="zerosix" layoutX="0.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="izerosix" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="onesix" layoutX="64.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ionesix" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="twosix" layoutX="128.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="itwosix" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="threesix" layoutX="192.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ithreesix" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="foursix" layoutX="256.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ifoursix" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fivesix" layoutX="320.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ifivesix" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sixsix" layoutX="384.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="isixsix" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sevensix" layoutX="448.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="isevensix" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="2.0" layoutY="130.0" prefHeight="64.0" prefWidth="512.0">
+               <children>
+                    <StackPane fx:id="zerofive" layoutX="0.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="izerofive" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="onefive" layoutX="64.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ionefive" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="twofive" layoutX="128.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="itwofive" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="threefive" layoutX="192.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ithreefive" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fourfive" layoutX="256.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ifourfive" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fivefive" layoutX="320.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ifivefive" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sixfive" layoutX="384.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="isixfive" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sevenfive" layoutX="448.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="isevenfive" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+               </children>
+            </AnchorPane>
+           <AnchorPane layoutX="2.0" layoutY="194.0" prefHeight="64.0" prefWidth="512.0">
+               <children>
+                  <StackPane fx:id="zerofour" layoutX="0.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="izerofour" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="onefour" layoutX="64.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ionefour" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="twofour" layoutX="128.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="itwofour" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="threefour" layoutX="192.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ithreefour" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fourfour" layoutX="256.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ifourfour" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fivefour" layoutX="320.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ifivefour" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sixfour" layoutX="384.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="isixfour" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sevenfour" layoutX="448.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="isevenfour" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="2.0" layoutY="258.0" prefHeight="64.0" prefWidth="512.0">
+               <children>
+                    <StackPane fx:id="zerothree" layoutX="0.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="izerothree" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="onethree" layoutX="64.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ionethree" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="twothree" layoutX="128.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="itwothree" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="threethree" layoutX="192.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ithreethree" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fourthree" layoutX="256.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ifourthree" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fivethree" layoutX="320.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ifivethree" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sixthree" layoutX="384.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="isixthree" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="seventhree" layoutX="448.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="iseventhree" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="2.0" layoutY="322.0" prefHeight="64.0" prefWidth="512.0">
+               <children>
+                  <StackPane fx:id="zerotwo" layoutX="0.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="izerotwo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="onetwo" layoutX="64.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ionetwo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="twotwo" layoutX="128.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="itwotwo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="threetwo" layoutX="192.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ithreetwo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fourtwo" layoutX="256.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ifourtwo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fivetwo" layoutX="320.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ifivetwo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sixtwo" layoutX="384.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="isixtwo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="seventwo" layoutX="448.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="iseventwo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="2.0" layoutY="386.0" prefHeight="64.0" prefWidth="512.0">
+               <children>
+                    <StackPane fx:id="zeroone" layoutX="0.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="izeroone" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="oneone" layoutX="64.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ioneone" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="twoone" layoutX="128.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="itwoone" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="threeone" layoutX="192.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ithreeone" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fourone" layoutX="256.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ifourone" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fiveone" layoutX="320.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ifiveone" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sixone" layoutX="384.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="isixone" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sevenone" layoutX="448.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="isevenone" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="2.0" layoutY="450.0" prefHeight="64.0" prefWidth="512.0">
+               <children>
+                  <StackPane fx:id="zerozero" layoutX="0.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="izerozero" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="onezero" layoutX="64.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ionezero" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="twozero" layoutX="128.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="itwozero" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="threezero" layoutX="192.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ithreezero" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fourzero" layoutX="256.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="ifourzero" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="fivezero" layoutX="320.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="ifivezero" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sixzero" layoutX="384.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <ImageView fx:id="isixzero" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+                  <StackPane fx:id="sevenzero" layoutX="448.0" layoutY="0.0" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <ImageView fx:id="isevenzero" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></StackPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <TextArea fx:id="summaryField" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="516.0" prefWidth="205.0">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </TextArea>
+   </children>
+</HBox>
