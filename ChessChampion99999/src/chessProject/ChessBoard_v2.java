@@ -266,13 +266,18 @@ public class ChessBoard_v2{
 						if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece) && (!(chessPiece instanceof Pawn) || 
 							(chessBoard[enemyX][enemyY] != null && chessBoard[enemyX][enemyY].isWhitePiece() != whiteToMove))
 							|| chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
-							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY || a[0] == checkingEnemy.getXCoordinate()
-							&& a[1] == checkingEnemy.getYCoordinate() - ((Pawn)chessPiece).getCoefficient()))
+							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY))
 						{
 							highlights.add(new int[] {enemyX,enemyY});
 						}
 						enemyX += coefficientX;
 						enemyY += coefficientY;
+					}
+					
+					if (checkingEnemy instanceof Pawn && chessPiece instanceof Pawn) {
+						pawnMoves.get(chessPiece).stream().filter(a -> a[0] == checkingEnemy.getXCoordinate()
+						&& a[1] == checkingEnemy.getYCoordinate() - ((Pawn)chessPiece).getCoefficient())
+						.forEach(b -> highlights.add(b));
 					}
 				} 
 				else {
