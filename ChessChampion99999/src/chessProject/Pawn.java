@@ -50,7 +50,9 @@ public class Pawn extends chessPiece{
 				}	
 			}
 		}
-		chessBoard.updatePawnMoves(this, coordinates);
+		if (coordinates.size() > 0) {
+			chessBoard.updatePawnMoves(this, coordinates);
+		}
 	}
 
 	@Override
