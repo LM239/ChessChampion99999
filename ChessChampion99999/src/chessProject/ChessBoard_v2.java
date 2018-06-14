@@ -179,12 +179,7 @@ public class ChessBoard_v2{
 			
 	
 	private boolean highlightContainsTuple(int x, int y) {
-		for (int[] tuple : highlights) {
-			if (tuple[0] == x && tuple[1] == y) {
-				return true;
-			}
-		}
-		return false;
+		return highlights.stream().anyMatch(p -> p[0] == x && p[1] == y);
 	}
 
 
