@@ -11,8 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class ChessBoard_v2{	
-	private boolean isFinished = false;
+public class ChessBoard_v2{
 	private boolean whiteToMove = true;
 	private boolean highlighting  = true;
 	private chessPiece whiteKing, blackKing;
@@ -84,7 +83,6 @@ public class ChessBoard_v2{
 			
 			if (surrounded) {
 				if (mustMoveKing) {
-					this.isFinished = true;
 					summary += "Check Mate!\n" + (whiteToMove ? "Black" : "White") + " wins!\nCongratulations!\n";
 				} 
 				else {
@@ -96,7 +94,6 @@ public class ChessBoard_v2{
 									highlights.clear();
 									return;
 								}
-								highlights.clear();
 							}
 						}
 					}
