@@ -69,7 +69,7 @@ public class ChessBoard_v2{
 					chessBoard[4][5] = new Queen(4,5,whiteToMove);
 					chessBoard[5][5] = new Knight(5,5,whiteToMove);
 					promotingPiece = piece;
-					summary += "Choose wich piece\n to promote to\n\n";
+					summary += "Choose wich piece\nto promote to\n\n";
 					highlightedPiece = null;
 					highlights.clear();
 					return;
@@ -263,13 +263,12 @@ public class ChessBoard_v2{
 						final int finalValueX = dynamicValueWasX ? dynamicValue : enemyX;
 						final int finalValueY = dynamicValueWasX ? enemyY : dynamicValue;
 						
-						if (threatBoard.get(dynamicValueWasX ? dynamicValue : enemyX).get(dynamicValueWasX ? enemyY : dynamicValue).contains(chessPiece)
-							&& (!(chessPiece instanceof Pawn) || (chessBoard[dynamicValueWasX ? dynamicValue : enemyX]
-							[dynamicValueWasX ? enemyY : dynamicValue] != null && chessBoard[dynamicValueWasX ? dynamicValue : enemyX]
-							[dynamicValueWasX ? enemyY : dynamicValue].isWhitePiece() != whiteToMove)) || chessPiece instanceof Pawn 
+						if (threatBoard.get(finalValueX).get(finalValueY).contains(chessPiece)
+							&& (!(chessPiece instanceof Pawn) || (chessBoard[finalValueX][finalValueY] != null && chessBoard[finalValueX]
+							[finalValueY].isWhitePiece() != whiteToMove)) || chessPiece instanceof Pawn 
 							&& pawnMoves.get(chessPiece).stream().anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY)) 
 						{
-							highlights.add(new int[]{dynamicValueWasX ? dynamicValue : enemyX, dynamicValueWasX ? enemyY : dynamicValue});
+							highlights.add(new int[]{finalValueX, finalValueY});
 						}
 						dynamicValue += coefficient;
 					}
@@ -349,8 +348,10 @@ public class ChessBoard_v2{
 			int testValue = (dynamicValueWasX ? kingX : kingY) + coefficient;
 	
 			while(true) {
-				if (chessBoard[dynamicValueWasX ? testValue : kingX][dynamicValueWasX ? kingY : testValue] != null) {
-					if (chessBoard[dynamicValueWasX ? testValue : kingX][dynamicValueWasX ? kingY : testValue] == chessPiece) {
+				final int finalX = dynamicValueWasX ? testValue : kingX;
+				final int finalY = dynamicValueWasX ? kingY : testValue;
+				if (chessBoard[finalX][finalY] != null) {
+					if (chessBoard[finalX][finalY] == chessPiece) {
 						clearHorisontal = true;
 					}
 					break;
@@ -645,5 +646,5 @@ public class ChessBoard_v2{
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
 	}
-	
+
 }
