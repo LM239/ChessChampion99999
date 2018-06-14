@@ -397,7 +397,7 @@ public class ChessBoard_v2{
 			int coefficientY = pieceY - kingY > 0 ? 1 : -1;
 			int testValueX = kingX + coefficientX;
 			int testValueY = kingY + coefficientY;
-			boolean clearDiagonal = true;
+			boolean clearDiagonal = false;
 			
 			while(true) {
 				if (chessBoard[testValueX][testValueY] != null) {
