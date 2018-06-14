@@ -51,6 +51,10 @@ public class ChessBoard_v2{
 				rook.setCoordinates(rook.getXCoordinate() + (currentX - x > 0 ? 3 : -2) ,currentY);
 			} 
 			
+			chessBoard[x][y] = piece; 
+			chessBoard[piece.getXCoordinate()][piece.getYCoordinate()] = null;
+			piece.setCoordinates(x,y);
+			
 			if (piece instanceof Pawn) { 
 				if (y == 7 || y == 0) {
 					chessBoard[x][y] = new Queen(x,y, whiteToMove);
@@ -59,9 +63,6 @@ public class ChessBoard_v2{
 					chessBoard[x][y - ((Pawn)piece).getCoefficient()] = null;
 				}
 			} 
-			chessBoard[piece.getXCoordinate()][piece.getYCoordinate()] = null;
-			piece.setCoordinates(x,y);
-			chessBoard[x][y] = piece; 
 			
 			inCheck = false;
 			mustMoveKing = false;
