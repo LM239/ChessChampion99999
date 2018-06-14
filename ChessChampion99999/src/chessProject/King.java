@@ -8,6 +8,8 @@ public class King extends chessPiece {
 	public King(int x, int y, boolean white, ChessBoard_v2 chessBoard_v2) {
 		super(x, y, white, chessBoard_v2);
 		charCode = white ? "\u2654" : "\u265A";
+		charRepresentation = "K";
+		instance = (p -> p instanceof King);
 		pieceImg = new Image(chessPiece.class.getResource(white ? "/WK.png" : "/BK.png").toExternalForm());
 	}
 

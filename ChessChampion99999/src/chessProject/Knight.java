@@ -7,6 +7,8 @@ public class Knight extends chessPiece {
 	public Knight(int x, int y, boolean white) {
 		super(x, y, white, chessBoard);
 		charCode = white ? "\u2658" : "\u265E";
+		charRepresentation = "N";
+		instance = (p -> p instanceof Knight);
 		pieceImg = new Image(chessPiece.class.getResource(white ? "/WN.png" : "/BN.png").toExternalForm());
 	}
 	

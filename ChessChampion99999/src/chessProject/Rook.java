@@ -8,6 +8,8 @@ public class Rook extends chessPiece{
 	public Rook(int x, int y, boolean white) {
 		super(x, y, white, chessBoard);
 		charCode = white ? "\u2656" : "\u265C";
+		charRepresentation = "R";
+		instance = (p -> p instanceof Rook);
 		pieceImg = new Image(chessPiece.class.getResource(white ? "/WR.png" : "/BR.png").toExternalForm());
 	}
 

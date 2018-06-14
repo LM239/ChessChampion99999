@@ -7,8 +7,9 @@ public class Queen extends chessPiece {
 	public Queen(int x, int y, boolean white) {
 		super(x, y, white, chessBoard);
 		charCode = white ? "\u2655" : "\u265B";
+		charRepresentation = "Q";
+		instance = (p -> p instanceof Queen);
 		pieceImg = new Image(chessPiece.class.getResource(white ? "/WQ.png" : "/BQ.png").toExternalForm());
- 
 	}
 
 	@Override

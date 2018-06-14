@@ -13,6 +13,8 @@ public class Pawn extends chessPiece{
 		super(x, y, white, chessBoard);
 		charCode = white ? "\u2659" : "\u265F";
 		coefficient = white ? 1 : -1;
+		charRepresentation = "P";
+		instance = (p -> p instanceof Pawn);
 		pieceImg = new Image(chessPiece.class.getResource(white ? "/WP.png" : "/BP.png").toExternalForm());
 	}
 

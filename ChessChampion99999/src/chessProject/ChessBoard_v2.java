@@ -18,12 +18,16 @@ public class ChessBoard_v2{
 	private String summary = "";
 	private boolean inCheck = false;
 	private boolean mustMoveKing = false;
+	private boolean promotingPawn = false;
 	private chessPiece checkingEnemy = null;
-	private final chessPiece[][] chessBoard = new chessPiece[8][8];
+	private chessPiece promotingPiece = null;
+	private chessPiece[][] chessBoard = new chessPiece[8][8];
+	private chessPiece[][] copyOfBoard = new chessPiece[8][8];
 	private final List<List<Set<chessPiece>>> threatBoard = new ArrayList<>();
 	private Collection<int[]> highlights = new ArrayList<>();
 	private Map<Pawn, Collection<int[]>> pawnMoves = new HashMap<>();
 	private chessPiece highlightedPiece = null;
+	private String moveString = "";
 
 	public ChessBoard_v2() {
 		for (int i = 0; i < 8; i++) {
@@ -38,7 +42,7 @@ public class ChessBoard_v2{
 			
 	private void updateBoard(chessPiece piece, int x, int y) {
 		if (piece.legalMove(x,y)) {
-			String moveString = getMoveString(piece,x,y);
+			moveString  = getMoveString(piece,x,y);
 			if (piece instanceof King && Math.abs(piece.getXCoordinate() - x) == 2) {
 				int currentX = piece.getXCoordinate();
 				int currentY = piece.getYCoordinate();
@@ -51,61 +55,82 @@ public class ChessBoard_v2{
 				rook.setCoordinates(rook.getXCoordinate() + (currentX - x > 0 ? 3 : -2) ,currentY);
 			} 
 			
-			chessBoard[x][y] = piece; 
 			chessBoard[piece.getXCoordinate()][piece.getYCoordinate()] = null;
 			piece.setCoordinates(x,y);
+			chessBoard[x][y] = piece;
 			
 			if (piece instanceof Pawn) { 
 				if (y == 7 || y == 0) {
-					chessBoard[x][y] = new Queen(x,y, whiteToMove);
+					promotingPawn = true;
+					copyOfBoard = cloneArray(chessBoard);
+					chessBoard = new chessPiece[8][8];
+					chessBoard[2][5] = new Bishop(2,5,whiteToMove);
+					chessBoard[3][5] = new Rook(3,5,whiteToMove);
+					chessBoard[4][5] = new Queen(4,5,whiteToMove);
+					chessBoard[5][5] = new Knight(5,5,whiteToMove);
+					promotingPiece = piece;
+					summary += "Choose wich piece\n to promote to";
+					return;
 				}
 				else if (x != piece.getXCoordinate() && chessBoard[x][y] == null) {
 					chessBoard[x][y - ((Pawn)piece).getCoefficient()] = null;
 				}
-			} 
+			}  
 			
-			inCheck = false;
-			mustMoveKing = false;
-			whiteToMove = !whiteToMove; 
-			highlights.clear();
-			highlighting = true;
-			highlightedPiece = null;
-			checkingEnemy = null;
-			updateThreatBoard();
-			
-			boolean surrounded = surrounded();
-			boolean mustMoveKing = mustMoveKing();
-			
-			if (inCheck) {
-				moveString += surrounded && mustMoveKing ? "#" : "+";
-			}
-			
-			summary += moveString + "\n" + (whiteToMove ? "White to move\n" : "Black to move\n") + this.toString() + "\n\n";
-			
-			if (surrounded) {
-				if (mustMoveKing) {
-					summary += "Check Mate!\n" + (whiteToMove ? "Black" : "White") + " wins!\nCongratulations!\n";
-				} 
-				else {
-					for (chessPiece[] column : chessBoard) {
-						for (chessPiece pieceAtXY : column) {
-							if (pieceAtXY != null && pieceAtXY.isWhitePiece() == whiteToMove) {
-								saveHiglights(pieceAtXY);
-								if (highlights.size() > 0) {
-									highlights.clear();
-									return;
-								}
-								highlights.clear();
-							}
-						}
-					}
-					summary += "Draw!\n" + (!whiteToMove ? "Black" : "White") + " can't move!\n1/2-1/2";
-				}
-			}
+			finishMove(moveString);
 		} 
 		else {
 			summary += "Invalid move\n\n";
 		}
+	}
+
+
+	private void finishMove(String moveString) {
+		inCheck = false;
+		mustMoveKing = false;
+		whiteToMove = !whiteToMove; 
+		highlights.clear();
+		highlighting = true;
+		highlightedPiece = null;
+		checkingEnemy = null;
+		updateThreatBoard();
+		
+		boolean surrounded = surrounded();
+		boolean mustMoveKing = mustMoveKing();
+		
+		if (inCheck) {
+			moveString += surrounded && mustMoveKing ? "#" : "+";
+		}
+		
+		summary += moveString + "\n" + (whiteToMove ? "White to move\n" : "Black to move\n") + this.toString() + "\n\n";
+		
+		if (surrounded) {
+			if (mustMoveKing) {
+				summary += "Check Mate!\n" + (whiteToMove ? "Black" : "White") + " wins!\nCongratulations!\n";
+			} 
+			else {
+				for (chessPiece[] column : chessBoard) {
+					for (chessPiece pieceAtXY : column) {
+						if (pieceAtXY != null && pieceAtXY.isWhitePiece() == whiteToMove) {
+							saveHiglights(pieceAtXY);
+							if (highlights.size() > 0) {
+								highlights.clear();
+								return;
+							}
+						}
+					}
+				}
+				summary += "Draw!\n" + (!whiteToMove ? "Black" : "White") + " can't move!\n1/2-1/2";
+			}
+		}
+	}
+	
+	public chessPiece[][] cloneArray(chessPiece[][] board) {
+	    chessPiece[][] newBoard = new chessPiece[8][8];
+	    for (int i = 0; i < 8; i++) {
+	      newBoard[i] = board[i].clone();
+	    }
+	    return newBoard;
 	}
 
 			
@@ -116,35 +141,19 @@ public class ChessBoard_v2{
 				result = Character.toString(("abcdefgh".charAt(piece.getXCoordinate()))) + "x";
 			}
 			result += Character.toString(("abcdefgh".charAt(x))) + Integer.toString(y+1);
-			
-			if (y == 0 || y == 7) {
-				result += "=Q";
-			}
 			return result;
-		}
-		Predicate<chessPiece> g = null;
-		if (piece instanceof Knight) {
-			g = (a-> a instanceof Knight);
-			result = "N";
 		} 
-		else if(piece instanceof Bishop) {
-			g = (a-> a instanceof Bishop);
-			result = "B";
-		}
-		else if(piece instanceof Queen) {
-			g = (a-> a instanceof Queen);
-			result = "Q";
-		}
-		else if(piece instanceof Rook) {
-			g = (a-> a instanceof Rook);
-			result = "R";
-		}
-		else if(piece instanceof King) {
+		Predicate<chessPiece> g = null;
+		if(piece instanceof King) {
 			if (Math.abs(piece.getXCoordinate() - x) == 2) {
 				return x > piece.getXCoordinate() ? "O-O" : "O-O-O";
 			}
 			g = (a -> false);
 			result = "K";
+		}
+		else {
+			g = piece.getInstance();
+			result = piece.getCharrepresentation();
 		}
 		
 		try {
@@ -178,26 +187,39 @@ public class ChessBoard_v2{
 	}
 	
 	public void getInput(int x, int y) {
-		if (!highlighting && highlightContainsTuple(x,y)) {
+		if (!promotingPawn &&!highlighting && highlights.stream().anyMatch(p -> p[0] == x && p[1] == y)) {
 			updateBoard(highlightedPiece,x, y);
 		}
-		else if (chessBoard[x][y] != null && chessBoard[x][y].isWhitePiece() == whiteToMove) {
+		else if (!promotingPawn && chessBoard[x][y] != null && chessBoard[x][y].isWhitePiece() == whiteToMove) {
 			highlights.clear();
 			saveHiglights(chessBoard[x][y]);
 			highlightedPiece = chessBoard[x][y];
 			highlighting = false;
+		}
+		else if(promotingPawn) {
+			if (y == 5 && x > 1 && x < 6) {
+				promotingPawn = false;
+				int xCoor = promotingPiece.getXCoordinate();
+				int yCoor = promotingPiece.getYCoordinate();
+				chessBoard = copyOfBoard;
+				switch(x) {
+					case 2 : chessBoard[xCoor][yCoor] = new Bishop(xCoor,yCoor,whiteToMove); break;
+					case 3 : chessBoard[xCoor][yCoor] = new Rook(xCoor,yCoor,whiteToMove); break;
+					case 4 : chessBoard[xCoor][yCoor] = new Queen(xCoor,yCoor,whiteToMove);break;
+					case 5 : chessBoard[xCoor][yCoor] = new Knight(xCoor,yCoor,whiteToMove); break;
+				}
+				promotingPiece = null;
+				finishMove(moveString + "=" + chessBoard[xCoor][yCoor].getCharrepresentation());
+			}
+			else {
+				summary = "Invalid choice";
+			}
 		}
 		else {
 			summary += "Illegal choice\n\n" + (whiteToMove ? "White to move\n" : "Black to move\n")
 			+ this.toString() + "\n\n";;
 		}
 	}
-			
-	
-	private boolean highlightContainsTuple(int x, int y) {
-		return highlights.stream().anyMatch(p -> p[0] == x && p[1] == y);
-	}
-
 
 	@Override
 	public String toString() {
@@ -620,6 +642,61 @@ public class ChessBoard_v2{
 		}
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
+	}
+	
+	public static void main(String[] args) {
+		ChessBoard_v2 game = new ChessBoard_v2();
+		game.getInput(2,1);
+		game.getInput(2,3);
+		game.getInput(4,6);
+		game.getInput(4,5);
+		game.getInput(3,0);
+		game.getInput(1,2);
+		game.getInput(1,7);
+		game.getInput(0,5);
+		game.getInput(2,3);
+		game.getInput(2,4);
+		game.getInput(1,2);
+		game.getInput(3,7);
+		game.getInput(7,3);
+		game.getInput(1,2);
+		game.getInput(7,2);
+		game.getInput(0,5);
+		game.getInput(1,3);
+		game.getInput(4,0);
+		game.getInput(3,0);
+		game.getInput(1,3);
+		game.getInput(3,4);
+		game.getInput(3,0);
+		game.getInput(2,1);
+		game.getInput(3,4);
+		game.getInput(1,5);
+		game.getInput(2,1);
+		game.getInput(1,2);
+		game.getInput(1,5);
+		game.getInput(2,3);
+		game.getInput(1,2);
+		game.getInput(1,3);
+		game.getInput(7,3);
+		game.getInput(6,2);
+		game.getInput(7,2);
+		game.getInput(1,3);
+		game.getInput(0,3);
+		game.getInput(2,6);
+		game.getInput(2,5);
+		game.getInput(6,2);
+		game.getInput(7,2);
+		game.getInput(7,3);
+		game.getInput(6,2);
+		game.getInput(2,2);
+		game.getInput(7,3);
+		game.getInput(7,2);
+		game.getInput(2,2);
+		game.getInput(1,1);
+		game.getInput(7,2);
+		game.getInput(7,5);
+		game.getInput(1,6);
+		game.getInput(1,4);
 	}
 	
 }

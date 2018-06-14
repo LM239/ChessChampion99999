@@ -338,7 +338,7 @@ public class GUIController_v2 {
 				}
 			}
 		}
-		System.out.println(Integer.toString(xCoor) + "," + Integer.toString(yCoor));
+		System.out.println("game.getInput(" + Integer.toString(xCoor) + "," + Integer.toString(yCoor) + ");");
 		game.getInput(xCoor,yCoor);
 		update();
 	}
