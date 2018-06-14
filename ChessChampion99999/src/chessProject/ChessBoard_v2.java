@@ -2,8 +2,11 @@ package chessProject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -14,17 +17,16 @@ public class ChessBoard_v2{
 	private boolean highlighting  = true;
 	private chessPiece whiteKing, blackKing;
 	private String summary = "";
-	private String moveString = "";
 	private boolean inCheck = false;
 	private boolean mustMoveKing = false;
 	private chessPiece checkingEnemy = null;
 	private final chessPiece[][] chessBoard = new chessPiece[8][8];
 	private final List<List<Set<chessPiece>>> threatBoard = new ArrayList<>();
 	private Collection<int[]> highlights = new ArrayList<>();
+	private Map<Pawn, Collection<int[]>> pawnMoves = new HashMap<>();
 	private chessPiece highlightedPiece = null;
-	GUIController_v2 controller;
-	
-	public ChessBoard_v2(GUIController_v2 controller) {
+
+	public ChessBoard_v2() {
 		for (int i = 0; i < 8; i++) {
 			threatBoard.add(new ArrayList<>());
 			for (int o = 0; o < 8; o++) {
@@ -32,13 +34,12 @@ public class ChessBoard_v2{
 			}
 		}
 		initializeBoard();
-		this.controller = controller;
 	}
 			
 			
 	private void updateBoard(chessPiece piece, int x, int y) {
 		if (piece.legalMove(x,y)) {
-			moveString = getMoveString(piece,x,y);
+			String moveString = getMoveString(piece,x,y);
 			if (piece instanceof King && Math.abs(piece.getXCoordinate() - x) == 2) {
 				int currentX = piece.getXCoordinate();
 				int currentY = piece.getYCoordinate();
@@ -81,7 +82,6 @@ public class ChessBoard_v2{
 				this.isFinished = true;
 				summary += "Check Mate!\n" + (whiteToMove ? "Black" : "White") + " wins!\nCongratulations!\n";
 			}
-			moveString = "";
 		} 
 		else {
 			summary += "Invalid move\n\n";
@@ -147,6 +147,7 @@ public class ChessBoard_v2{
 
 
 	private void updateThreatBoard() {
+		pawnMoves.clear();
 		threatBoard.stream().forEach(a -> a.stream().forEach(Set::clear));
 		
 		Arrays.stream(this.chessBoard).forEach(x -> Arrays.stream(x).filter(y -> y != null)
@@ -217,15 +218,15 @@ public class ChessBoard_v2{
 					int coefficient = dynamicValueWasX && enemyX - kingX > 0 || !dynamicValueWasX && enemyY - kingY > 0 ? -1 : 1;
 					while (true) {
 						if ((dynamicValueWasX ? kingX : kingY)-dynamicValue == 0) {break;}
+						final int finalValueX = dynamicValueWasX ? dynamicValue : enemyX;
+						final int finalValueY = dynamicValueWasX ? enemyY : dynamicValue;
+						
 						if (threatBoard.get(dynamicValueWasX ? dynamicValue : enemyX).get(dynamicValueWasX ? enemyY : dynamicValue).contains(chessPiece)
-							&& !(chessPiece instanceof Pawn) || (chessPiece instanceof Pawn &&((chessBoard[dynamicValueWasX ? dynamicValue : enemyX][dynamicValueWasX ? enemyY : dynamicValue] != null 
-							&& chessBoard[dynamicValueWasX ? dynamicValue : enemyX][dynamicValueWasX ? enemyY : dynamicValue].isWhitePiece() != whiteToMove)
-							&& threatBoard.get(dynamicValueWasX ? dynamicValue : enemyX).get(dynamicValueWasX ? enemyY : dynamicValue).contains(chessPiece)		
-							|| ((dynamicValueWasX ? dynamicValue : enemyX) == pieceX &&
-							chessBoard[dynamicValueWasX ? dynamicValue : enemyX][dynamicValueWasX ? enemyY : dynamicValue] == null
-							&& ((dynamicValueWasX ? enemyY : dynamicValue) == pieceY + ((Pawn)chessPiece).getCoefficient()
-							|| (dynamicValueWasX ? enemyY : dynamicValue) == pieceY + ((Pawn)chessPiece).getCoefficient()*2 
-							&& ((Pawn)chessPiece).isLongMove()))))) 
+							&& (!(chessPiece instanceof Pawn) || (chessBoard[dynamicValueWasX ? dynamicValue : enemyX]
+							[dynamicValueWasX ? enemyY : dynamicValue] != null && chessBoard[dynamicValueWasX ? dynamicValue : enemyX]
+							[dynamicValueWasX ? enemyY : dynamicValue].isWhitePiece() != whiteToMove)) || chessPiece instanceof Pawn 
+							&& chessBoard[dynamicValueWasX ? dynamicValue : enemyX][dynamicValueWasX ? enemyY : dynamicValue] == null
+							&& pawnMoves.get(chessPiece).stream().anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY)) 
 						{
 							highlights.add(new int[]{dynamicValueWasX ? dynamicValue : enemyX, dynamicValueWasX ? enemyY : dynamicValue});
 						}
@@ -238,11 +239,13 @@ public class ChessBoard_v2{
 						
 					while (true) {
 						if (enemyX-kingX == 0) {break;}
-						if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece) && !(chessPiece instanceof Pawn) 
-							|| (chessPiece instanceof Pawn) && ((chessBoard[enemyX][enemyY] != null 
-							&& chessBoard[enemyX][enemyY].isWhitePiece() != whiteToMove) && threatBoard.get(enemyX).get(enemyY).contains(chessPiece)
-							|| (enemyX == pieceX && chessBoard[enemyX][enemyY] == null && (enemyY == pieceY + ((Pawn)chessPiece).getCoefficient() 
-							|| enemyY == pieceY + 2*((Pawn)chessPiece).getCoefficient() && ((Pawn)chessPiece).isLongMove()))))
+						final int finalValueX = enemyX;
+						final int finalValueY = enemyY;
+						
+						if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece) && (!(chessPiece instanceof Pawn) || 
+							(chessBoard[enemyX][enemyY] != null && chessBoard[enemyX][enemyY].isWhitePiece() != whiteToMove))
+							|| chessPiece instanceof Pawn && chessBoard[enemyX][enemyY] == null && pawnMoves
+							.get(chessPiece).stream().anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY))
 						{
 							highlights.add(new int[] {enemyX,enemyY});
 						}
@@ -270,7 +273,7 @@ public class ChessBoard_v2{
 					}
 				}
 			}
-			if (!((King)king).getHasMoved()) {
+			if (!((King)king).getHasMoved() && !inCheck) {
 				for (int x = -1; x < 2; x+=2) {
 					int coefficient = kingX + x;
 					while(coefficient != (x == -1 ? -1 : 8)) {
@@ -324,12 +327,8 @@ public class ChessBoard_v2{
 							}
 						}
 						
-						if (chessPiece instanceof Pawn && !dynamicValueWasX && 
-								chessBoard[pieceX][pieceY + (chessPiece.isWhitePiece() ? 1 : -1)] == null) {
-							highlights.add(new int[]{pieceX,pieceY + (chessPiece.isWhitePiece() ? 1 : -1)});
-							if (((Pawn) chessPiece).isLongMove() && chessBoard[pieceX][pieceY + (chessPiece.isWhitePiece() ? 2 : -2)] == null) {
-								highlights.add(new int[]{pieceX,pieceY + (chessPiece.isWhitePiece() ? 2 : -2)});
-							}
+						if (chessPiece instanceof Pawn && !dynamicValueWasX) {
+							pawnMoves.get(chessPiece).stream().forEach(a -> highlights.add(a));
 						}
 						return;
 					} 
@@ -400,14 +399,10 @@ public class ChessBoard_v2{
 			}
 		}
 		
-		pieceX = chessPiece.getXCoordinate();
-		pieceY = chessPiece.getYCoordinate();
-		if (chessPiece instanceof Pawn && chessBoard[pieceX][pieceY + (chessPiece.isWhitePiece() ? 1 : -1)] == null) {
-			highlights.add(new int[]{pieceX,pieceY + (chessPiece.isWhitePiece() ? 1 : -1)});
-			if (((Pawn) chessPiece).isLongMove() && chessBoard[pieceX][pieceY + (chessPiece.isWhitePiece() ? 2 : -2)] == null) {
-				highlights.add(new int[]{pieceX,pieceY + (chessPiece.isWhitePiece() ? 2 : -2)});
-			}
+		if (chessPiece instanceof Pawn) {
+			pawnMoves.get(chessPiece).stream().forEach(a -> highlights.add(a));
 		}
+		
 	}
 			
 			
@@ -474,10 +469,11 @@ public class ChessBoard_v2{
 				threatenedIndexes.add(new int[]{enemyX,enemyY});
 			}
 		}
-		boolean returnValue = !threatenedIndexes.stream().anyMatch(p -> Arrays.stream(chessBoard).anyMatch(c -> Arrays.stream(c)
-				.anyMatch(d -> d != null && d.isWhitePiece() == whiteToMove && !(d instanceof King) 
-				&& (((d instanceof Pawn) && (p[0] == d.getXCoordinate() && p[1] == d.getYCoordinate()
-				+ 2*((Pawn)d).getCoefficient() && ((Pawn)d).isLongMove())) || d.legalMove(p[0], p[1])))));
+		boolean returnValue = !threatenedIndexes.stream().anyMatch(g -> threatBoard.get(g[0]).get(g[1]).stream()
+			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King) 
+			&& (!(d instanceof Pawn) || chessBoard[g[0]][g[1]] != null)) || pawnMoves.entrySet().stream()
+			.filter(a -> a.getKey().isWhitePiece() == whiteToMove).map(Entry::getValue).anyMatch(b -> b.stream()
+			.anyMatch(l -> l[0] == g[0] && l[1] == g[1])));
 		
 		mustMoveKing = returnValue;
 		return returnValue;
@@ -499,6 +495,10 @@ public class ChessBoard_v2{
 			
 	public void updateThreatBoard(int x, int y,chessPiece value) {
 		threatBoard.get(x).get(y).add(value);
+	}
+	
+	public void updatePawnMoves(Pawn piece, Collection<int[]> coordinates) {
+		pawnMoves.put(piece, coordinates);
 	}
 
 	

@@ -151,7 +151,7 @@ public class GUIController_v2 {
 	ChessBoard_v2 game;
 
 	public void initialize() {
-		game = new ChessBoard_v2(this);
+		game = new ChessBoard_v2();
 		fields[0][0] = zerozero;
 		fields[0][1] = zeroone;
 		fields[0][2] = zerotwo;

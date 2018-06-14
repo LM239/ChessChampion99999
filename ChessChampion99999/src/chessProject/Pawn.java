@@ -1,10 +1,13 @@
 package chessProject;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javafx.scene.image.Image;
 
 public class Pawn extends chessPiece{
 	
-	private boolean longMove = true;
+	//private boolean longMove = true;
 	private final int coefficient;
 
 	public Pawn(int x, int y, boolean white) {
@@ -16,20 +19,22 @@ public class Pawn extends chessPiece{
 
 	@Override
 	protected boolean legalMove(int x, int y) {
-		if (super.legalMove(x, y) && y - this.yCoordinate == coefficient && (chessBoard.getPiece(x, y) == null && this.xCoordinate == x
-				|| Math.abs(this.xCoordinate - x) == 1 && chessBoard.getPiece(x, y) != null) || longMove && validLongMove(x,y) && chessBoard.getPiece(x, y) == null) {
-			longMove = false;
-			return true;
-		}
-		return false;
+		return (super.legalMove(x, y) && y - this.yCoordinate == coefficient && (chessBoard.getPiece(x, y) == null && this.xCoordinate == x
+				|| Math.abs(this.xCoordinate - x) == 1 && chessBoard.getPiece(x, y) != null) || 
+				this.yCoordinate == (white ? 1 : 6) && chessBoard.getPiece(x, y) == null
+				&& Math.abs(this.yCoordinate - y) == 2); 
 	}
-
-	private boolean validLongMove(int x, int y) {
-		if (this.xCoordinate == x && Math.abs(this.yCoordinate-y) == 2) {
-			this.longMove = false;
-			return true;
+	
+	private void placePawnMoves() {
+		if (chessBoard.getBoard()[xCoordinate][yCoordinate + coefficient] == null) {
+			Collection<int[]> coordinates = new ArrayList<>();
+			coordinates.add(new int[] {xCoordinate, yCoordinate + coefficient});
+			
+			if (this.yCoordinate == (white ? 1 : 6) && chessBoard.getBoard()[xCoordinate][yCoordinate + 2*coefficient] == null) {
+				coordinates.add(new int[] {xCoordinate, yCoordinate + 2*coefficient});
+			}
+			chessBoard.updatePawnMoves(this, coordinates);
 		}
-		return false;
 	}
 
 	@Override
@@ -39,11 +44,9 @@ public class Pawn extends chessPiece{
 				chessBoard.updateThreatBoard(this.xCoordinate + i, this.yCoordinate + coefficient, this);
 			}
 		}
+		placePawnMoves();
 	}
 	
-	public boolean isLongMove() {
-		return this.longMove;
-	}
 	
 	public int getCoefficient() {
 		return this.coefficient;
