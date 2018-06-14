@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class ChessBoard_v2{
+public class ChessBoard_v2{	
 	private boolean whiteToMove = true;
 	private boolean highlighting  = true;
 	private chessPiece whiteKing, blackKing;
@@ -94,6 +94,7 @@ public class ChessBoard_v2{
 									highlights.clear();
 									return;
 								}
+								highlights.clear();
 							}
 						}
 					}
@@ -500,10 +501,19 @@ public class ChessBoard_v2{
 		if (threatBoard.get(enemy.getXCoordinate()).get(enemy.getYCoordinate()).stream().anyMatch
 				(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King))) {return false;}
 		if(Math.abs(king.getXCoordinate() - enemy.getXCoordinate()) <= 1 && Math.abs(king.getYCoordinate() 
-				- enemy.getYCoordinate()) <= 1 || enemy instanceof Knight) {
+				- enemy.getYCoordinate()) <= 1 && !(enemy instanceof Pawn && ((Pawn)enemy).getJustMovedLong())|| enemy instanceof Knight) {
 			mustMoveKing = true;
 			return true;
 		}
+		if (enemy instanceof Pawn) {
+			final int finalEnemyX = enemy.getXCoordinate();
+			final int finalEnemyY = enemy.getYCoordinate();
+			return pawnMoves.entrySet().stream().filter(a -> a.getKey().isWhitePiece() == whiteToMove)
+				.map(Entry::getValue).anyMatch(b -> b.stream().anyMatch(l ->  l[0] == finalEnemyX &&
+				(finalEnemyX + 1 < 8 && pawnMoves.get(chessBoard[finalEnemyX +1][finalEnemyY]).contains(l)
+				|| finalEnemyX - 1 >= 0 && pawnMoves.get(chessBoard[finalEnemyX -1][finalEnemyY]).contains(l))));
+		}
+		
 		
 		int kingX = king.getXCoordinate();
 		int kingY = king.getYCoordinate();
@@ -530,16 +540,9 @@ public class ChessBoard_v2{
 			}
 		}
 		
-		final int finalEnemyX = enemy.getXCoordinate();
-		final int finalEnemyY = enemy.getYCoordinate();
-		
 		boolean returnValue = !threatenedIndexes.stream().anyMatch(g -> threatBoard.get(g[0]).get(g[1]).stream()
-			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King) 
-			&& (!(d instanceof Pawn) || chessBoard[g[0]][g[1]] != null)) || pawnMoves.entrySet().stream()
-			.filter(a -> a.getKey().isWhitePiece() == whiteToMove).map(Entry::getValue).anyMatch(b -> b.stream()
-			.anyMatch(l -> l[0] == g[0] && l[1] == g[1] || enemy instanceof Pawn && l[0] == finalEnemyX &&
-			(finalEnemyX + 1 < 8 && pawnMoves.get(chessBoard[finalEnemyX +1][finalEnemyY]) == b || finalEnemyX - 1 >= 0 
-			&& pawnMoves.get(chessBoard[finalEnemyX -1][finalEnemyY]) == b))));
+			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King) && (!(d instanceof Pawn)
+			|| chessBoard[g[0]][g[1]] != null)));
 		
 		mustMoveKing = returnValue;
 		return returnValue;
@@ -605,5 +608,5 @@ public class ChessBoard_v2{
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
 	}
-
+	
 }
