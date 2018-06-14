@@ -282,7 +282,7 @@ public class ChessBoard_v2{
 			for (int x = kingX - 1; x <= kingX + 1; x++) {
 				if (x < 0 || x > 7) {continue;}
 				for (int y = kingY - 1; y <= kingY + 1; y++) {
-					if (y < 0 || y > 7 || x == kingX && y == kingX) {continue;}
+					if (y < 0 || y > 7) {continue;}
 					if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
 						&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
 					{

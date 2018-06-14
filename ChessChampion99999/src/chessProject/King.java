@@ -25,8 +25,9 @@ public class King extends chessPiece {
 	protected void placeThreats(chessPiece[][] board) {
 		for (int i = this.xCoordinate - 1; i <= this.xCoordinate + 1; i++) {
 			if (i < 0 || i > 7) {continue;}
+			yloop:
 			for (int o = this.yCoordinate - 1; o <= this.yCoordinate + 1; o++) {
-				if (o < 0 || o > 7 || i == this.xCoordinate && o == this.yCoordinate) {continue;}
+				if (o < 0 || o > 7 || i == this.xCoordinate && o == this.yCoordinate) {continue yloop;}
 				chessBoard.updateThreatBoard(i, o, this);
 			}
 		}	
