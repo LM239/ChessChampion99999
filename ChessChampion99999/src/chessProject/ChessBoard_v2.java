@@ -69,7 +69,9 @@ public class ChessBoard_v2{
 					chessBoard[4][5] = new Queen(4,5,whiteToMove);
 					chessBoard[5][5] = new Knight(5,5,whiteToMove);
 					promotingPiece = piece;
-					summary += "Choose wich piece\n to promote to";
+					summary += "Choose wich piece\n to promote to\n\n";
+					highlightedPiece = null;
+					highlights.clear();
 					return;
 				}
 				else if (x != piece.getXCoordinate() && chessBoard[x][y] == null) {
@@ -642,61 +644,6 @@ public class ChessBoard_v2{
 		}
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
-	}
-	
-	public static void main(String[] args) {
-		ChessBoard_v2 game = new ChessBoard_v2();
-		game.getInput(2,1);
-		game.getInput(2,3);
-		game.getInput(4,6);
-		game.getInput(4,5);
-		game.getInput(3,0);
-		game.getInput(1,2);
-		game.getInput(1,7);
-		game.getInput(0,5);
-		game.getInput(2,3);
-		game.getInput(2,4);
-		game.getInput(1,2);
-		game.getInput(3,7);
-		game.getInput(7,3);
-		game.getInput(1,2);
-		game.getInput(7,2);
-		game.getInput(0,5);
-		game.getInput(1,3);
-		game.getInput(4,0);
-		game.getInput(3,0);
-		game.getInput(1,3);
-		game.getInput(3,4);
-		game.getInput(3,0);
-		game.getInput(2,1);
-		game.getInput(3,4);
-		game.getInput(1,5);
-		game.getInput(2,1);
-		game.getInput(1,2);
-		game.getInput(1,5);
-		game.getInput(2,3);
-		game.getInput(1,2);
-		game.getInput(1,3);
-		game.getInput(7,3);
-		game.getInput(6,2);
-		game.getInput(7,2);
-		game.getInput(1,3);
-		game.getInput(0,3);
-		game.getInput(2,6);
-		game.getInput(2,5);
-		game.getInput(6,2);
-		game.getInput(7,2);
-		game.getInput(7,3);
-		game.getInput(6,2);
-		game.getInput(2,2);
-		game.getInput(7,3);
-		game.getInput(7,2);
-		game.getInput(2,2);
-		game.getInput(1,1);
-		game.getInput(7,2);
-		game.getInput(7,5);
-		game.getInput(1,6);
-		game.getInput(1,4);
 	}
 	
 }
