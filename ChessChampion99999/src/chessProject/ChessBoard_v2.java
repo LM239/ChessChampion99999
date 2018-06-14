@@ -82,9 +82,26 @@ public class ChessBoard_v2{
 			
 			summary += moveString + "\n" + (whiteToMove ? "White to move\n" : "Black to move\n") + this.toString() + "\n\n";
 			
-			if (mustMoveKing && surrounded) {
-				this.isFinished = true;
-				summary += "Check Mate!\n" + (whiteToMove ? "Black" : "White") + " wins!\nCongratulations!\n";
+			if (surrounded) {
+				if (mustMoveKing) {
+					this.isFinished = true;
+					summary += "Check Mate!\n" + (whiteToMove ? "Black" : "White") + " wins!\nCongratulations!\n";
+				} 
+				else {
+					for (chessPiece[] column : chessBoard) {
+						for (chessPiece pieceAtXY : column) {
+							if (pieceAtXY != null && pieceAtXY.isWhitePiece() == whiteToMove) {
+								saveHiglights(pieceAtXY);
+								if (highlights.size() > 0) {
+									highlights.clear();
+									return;
+								}
+								highlights.clear();
+							}
+						}
+					}
+					summary += "Draw!\n" + (whiteToMove ? "Black" : "White") + "cant move!\n1/2-1/2";
+				}
 			}
 		} 
 		else {
