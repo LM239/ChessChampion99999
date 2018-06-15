@@ -601,8 +601,8 @@ public class ChessBoard_v2{
 		return this.highlights;
 	}
 	
-	public int[] getHighlightedPiece() {
-		return highlightedPiece != null ? new int[] {highlightedPiece.getXCoordinate(), highlightedPiece.getYCoordinate()} : null;
+	public chessPiece getHighlightedPiece() {
+		return highlightedPiece;
 	}
 	
 	public chessPiece[][] getBoard() {

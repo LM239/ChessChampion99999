@@ -317,9 +317,9 @@ public class GUIController_v2 {
 		for (int[] xyTuple : highlights) {
 			fields[xyTuple[0]][xyTuple[1]].setStyle("-fx-background-color: LIGHTBLUE");
 		}
-		int[] piece = game.getHighlightedPiece();
+		chessPiece piece = game.getHighlightedPiece();
 		if (piece != null) {
-			fields[piece[0]][piece[1]].setStyle("-fx-background-color: LIGHTPINK");
+			fields[piece.getXCoordinate()][piece.getYCoordinate()].setStyle("-fx-background-color: LIGHTPINK");
 		}
 	}
 
