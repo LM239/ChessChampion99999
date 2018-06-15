@@ -283,19 +283,14 @@ public class ChessBoard_v2{
 						final int finalValueY = dynamicValueWasX ? enemyY : dynamicValue;
 						
 						if (threatBoard.get(finalValueX).get(finalValueY).contains(chessPiece)
-							&& (!(chessPiece instanceof Pawn) || (chessBoard[finalValueX][finalValueY] != null && chessBoard[finalValueX]
-							[finalValueY].isWhitePiece() != whiteToMove)) || chessPiece instanceof Pawn 
-							&& pawnMoves.get(chessPiece).stream().anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY)) 
+							&& (!(chessPiece instanceof Pawn) || (chessBoard[finalValueX][finalValueY] != null)) 
+							|| chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
+							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY)) 
 						{
 							highlights.add(new int[]{finalValueX, finalValueY});
 						}
 						dynamicValue += coefficient;
 					}
-					if (checkingEnemy instanceof Pawn && chessPiece instanceof Pawn) {
-						pawnMoves.get(chessPiece).stream().filter(a -> a[0] == checkingEnemy.getXCoordinate() 
-						&& a[1] == checkingEnemy.getYCoordinate() - ((Pawn)chessPiece).getCoefficient())
-						.forEach(a -> highlights.add(a));
-					} 
 				} 
 				else if (Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)) {
 					int coefficientX = enemyX - kingX > 0 ? -1 : 1;
@@ -307,7 +302,7 @@ public class ChessBoard_v2{
 						final int finalValueY = enemyY;
 						
 						if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece) && (!(chessPiece instanceof Pawn) || 
-							(chessBoard[enemyX][enemyY] != null && chessBoard[enemyX][enemyY].isWhitePiece() != whiteToMove))
+							(chessBoard[enemyX][enemyY] != null))
 							|| chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
 							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY))
 						{
