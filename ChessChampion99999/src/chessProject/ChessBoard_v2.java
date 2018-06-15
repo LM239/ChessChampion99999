@@ -98,9 +98,10 @@ public class ChessBoard_v2{
 		updateThreatBoard();
 		
 		boolean surrounded = surrounded();
-		boolean mustMoveKing = mustMoveKing();
+		mustMoveKing = mustMoveKing();
 		
 		if (inCheck) {
+			highlightedPiece = whiteToMove ? whiteKing : blackKing;
 			moveString += surrounded && mustMoveKing ? "#" : "+";
 		}
 		
@@ -246,14 +247,32 @@ public class ChessBoard_v2{
 		int pieceX = chessPiece.getXCoordinate();
 		int pieceY = chessPiece.getYCoordinate();
 		if (inCheck) {
+			int enemyX = checkingEnemy.getXCoordinate();
+			int enemyY = checkingEnemy.getYCoordinate();
 			if (mustMoveKing) {
 				if (!(chessPiece instanceof King)) {
 					return;
 				}
-			} 
-			else if (!(chessPiece instanceof King)) {
-				int enemyX = checkingEnemy.getXCoordinate();
-				int enemyY = checkingEnemy.getYCoordinate();
+			}
+			if (chessPiece instanceof King) {
+				for (int x = kingX - 1; x <= kingX + 1; x++) {
+					if (x < 0 || x > 7 || (x == kingX && enemyX == kingX)) {continue;}
+					yloop:
+					for (int y = kingY - 1; y <= kingY + 1; y++) {
+						if (y < 0 || y > 7 || (y == kingY && enemyY == kingY) ||
+							Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)
+							&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
+							&& !(x == enemyX && y == enemyY)) {continue yloop;}
+						if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
+							&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
+						{
+							highlights.add(new int[]{x,y});
+						}
+					}
+				}
+				return;
+			}
+			else {
 				if (kingX == enemyX || kingY == enemyY) {
 					int dynamicValue = enemyX != kingX ? enemyX : enemyY;
 					boolean dynamicValueWasX = enemyX != kingX;
@@ -315,8 +334,9 @@ public class ChessBoard_v2{
 		if (chessPiece instanceof King) {
 			for (int x = kingX - 1; x <= kingX + 1; x++) {
 				if (x < 0 || x > 7) {continue;}
+				yloop:
 				for (int y = kingY - 1; y <= kingY + 1; y++) {
-					if (y < 0 || y > 7) {continue;}
+					if (y < 0 || y > 7) {continue yloop;}
 					if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
 						&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
 					{
@@ -507,18 +527,17 @@ public class ChessBoard_v2{
 			
 		switch(kingPosition.stream().filter(d -> d.isWhitePiece() != whiteToMove).mapToInt(c -> 1).sum()) {
 			case 0 : return false;
-			case 2 : highlightedPiece = king; mustMoveKing = true; inCheck = true; return true;
+			case 2 : inCheck = true; return true;
 		}
 		inCheck = true;
-		highlightedPiece = king;
 		chessPiece enemy = kingPosition.stream().filter(d -> d.isWhitePiece() != whiteToMove).findFirst().get();		
 		this.checkingEnemy = enemy;
 		
 		if (threatBoard.get(enemy.getXCoordinate()).get(enemy.getYCoordinate()).stream().anyMatch
 				(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King))) {return false;}
 		if(Math.abs(king.getXCoordinate() - enemy.getXCoordinate()) <= 1 && Math.abs(king.getYCoordinate() 
-				- enemy.getYCoordinate()) <= 1 && !(enemy instanceof Pawn && ((Pawn)enemy).getJustMovedLong())|| enemy instanceof Knight) {
-			mustMoveKing = true;
+				- enemy.getYCoordinate()) <= 1 && !(enemy instanceof Pawn && ((Pawn)enemy).getJustMovedLong())|| enemy instanceof Knight) 
+		{
 			return true;
 		}
 		if (enemy instanceof Pawn) {
@@ -556,12 +575,9 @@ public class ChessBoard_v2{
 			}
 		}
 		
-		boolean returnValue = !threatenedIndexes.stream().anyMatch(g -> threatBoard.get(g[0]).get(g[1]).stream()
+		return !threatenedIndexes.stream().anyMatch(g -> threatBoard.get(g[0]).get(g[1]).stream()
 			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King) && (!(d instanceof Pawn)
 			|| chessBoard[g[0]][g[1]] != null || pawnMoves.get(d).stream().anyMatch(a -> a[0] == g[0] && a[1] == g[1]))));
-		
-		mustMoveKing = returnValue;
-		return returnValue;
 	}
 			
 	public chessPiece getPiece(int x, int y) {
@@ -624,6 +640,4 @@ public class ChessBoard_v2{
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
 	}
-	
-	
 }
