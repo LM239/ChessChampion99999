@@ -343,7 +343,7 @@ public class ChessBoard_v2{
 							break;
 						}
 						if (Math.abs(kingX - index) < 3 && threatBoard.get(index).get(kingY).stream()
-								.anyMatch(b -> b.isWhitePiece() != whiteToMove)) {break;}
+							.anyMatch(b -> b.isWhitePiece() != whiteToMove)) {break;}
 						index += x;
 					}
 				}
@@ -387,11 +387,11 @@ public class ChessBoard_v2{
 								&& threatBoard.get(finalKingX).get(finalKingY).contains(chessPiece)) && 
 								(!(chessPiece instanceof Pawn || !dynamicValueWasX && chessBoard[finalKingX][finalKingY] != null 
 								&& chessBoard[finalKingX][finalKingY].isWhitePiece() != chessPiece.isWhitePiece())))
-								{
-									highlights.add(new int[] {finalKingX, finalKingY});
-								}
+							{
+								highlights.add(new int[] {finalKingX, finalKingY});
+							}
 							if (chessBoard[finalKingX][finalKingY] != null && chessBoard[finalKingX]
-									[finalKingY].isWhitePiece() != whiteToMove) {break;}
+								[finalKingY].isWhitePiece() != whiteToMove) {break;}
 						}
 						if (chessPiece instanceof Pawn && !dynamicValueWasX) {
 							pawnMoves.get(chessPiece).stream().filter(b -> b[0] == kingX).forEach(a -> highlights.add(a));
@@ -437,7 +437,7 @@ public class ChessBoard_v2{
 							indexY += coefficientY;
 							if (chessBoard[indexX][indexY] == null || (chessBoard[indexX][indexY].isWhitePiece() != whiteToMove &&
 								threatBoard.get(indexX).get(indexY).contains(chessPiece)) && (!(chessPiece instanceof Pawn || chessBoard[indexX][indexY] != null 
-								&& chessBoard[indexX][indexX].isWhitePiece() != chessPiece.isWhitePiece()))) 
+								&& chessBoard[indexX][indexY].isWhitePiece() != chessPiece.isWhitePiece()))) 
 							{
 								highlights.add(new int[] {indexX,indexY});	
 							}
@@ -458,14 +458,13 @@ public class ChessBoard_v2{
 			
 		for (int x = 0; x < 8; x++) {
 			for (int y = 0; y < 8; y++) {
-				if (threatBoard.get(x).get(y).contains(chessPiece)) {
-					if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece()) && 
-						(!(chessPiece instanceof Pawn) || chessBoard[x][y] != null && chessBoard[x][y].isWhitePiece() 
-						!= chessPiece.isWhitePiece()))
-					{
-						highlights.add(new int[]{x,y});
-					}
-				}
+				if (threatBoard.get(x).get(y).contains(chessPiece) && (chessBoard[x][y] == null 
+					|| chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece()) && 
+					(!(chessPiece instanceof Pawn) || chessBoard[x][y] != null
+					&& chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece()))
+				{
+					highlights.add(new int[]{x,y});
+				}	
 			}
 		}
 		
@@ -481,14 +480,15 @@ public class ChessBoard_v2{
 		int kingY = king.getYCoordinate();
 		for (int i = kingX - 1; i <= kingX + 1; i++) {
 			if(i < 0 || i > 7) {continue;}
+			yloop:
 			for (int o = kingY - 1; o <= kingY + 1; o++) {
-				if (o < 0 || o > 7) {continue;}
+				if (o < 0 || o > 7) {continue yloop;}
 				if ((chessBoard[i][o] == null || chessBoard[i][o].isWhitePiece() != whiteToMove)
 						&& (threatBoard.get(i).get(o).stream().allMatch(p -> p.isWhitePiece() == whiteToMove))) {
 						return false;
-					}
 				}
 			}
+		}
 		return true;
 	}
 			
@@ -505,13 +505,14 @@ public class ChessBoard_v2{
 		chessPiece enemy = kingPosition.stream().filter(d -> d.isWhitePiece() != whiteToMove).findFirst().get();		
 		this.checkingEnemy = enemy;
 		
-		if (threatBoard.get(enemy.getXCoordinate()).get(enemy.getYCoordinate()).stream().anyMatch
-				(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King))) {return false;}
+		if (threatBoard.get(enemy.getXCoordinate()).get(enemy.getYCoordinate()).stream()
+			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King))) 
+		{return false;}
+		
 		if(Math.abs(king.getXCoordinate() - enemy.getXCoordinate()) <= 1 && Math.abs(king.getYCoordinate() 
-				- enemy.getYCoordinate()) <= 1 && !(enemy instanceof Pawn && ((Pawn)enemy).getJustMovedLong())|| enemy instanceof Knight) 
-		{
-			return true;
-		}
+			- enemy.getYCoordinate()) <= 1 && !(enemy instanceof Pawn && ((Pawn)enemy).getJustMovedLong())
+			|| enemy instanceof Knight) {return true;}
+		
 		if (enemy instanceof Pawn) {
 			final int finalEnemyX = enemy.getXCoordinate();
 			final int finalEnemyY = enemy.getYCoordinate();
