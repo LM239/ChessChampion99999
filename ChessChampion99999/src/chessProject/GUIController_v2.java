@@ -1,5 +1,6 @@
 package chessProject;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javafx.fxml.FXML;
@@ -153,6 +154,8 @@ public class GUIController_v2 {
 	private ChessBoard_v2 game;
 	
 	private boolean highlight = true;
+	private Collection<int[]> currentHighlights = new ArrayList<>();
+	private String[][] colors = new String[8][8];
 
 	public void initialize() {
 		game = new ChessBoard_v2();
@@ -288,6 +291,16 @@ public class GUIController_v2 {
 		
 		nothing = new Image(GUIController_v2.class.getResource("/nothing.png").toExternalForm());
 		
+		boolean whiteSquare = true;
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+				colors[x][y] = (whiteSquare ? "-fx-background-color: WHITE" 
+						: "-fx-background-color: GRAY");
+				whiteSquare = !whiteSquare;
+			}
+			whiteSquare = !whiteSquare;
+		}
+		
 		for (ImageView[] fieldRow : ifields) {
 			for (ImageView field : fieldRow) {
 				field.setOnMouseClicked(e -> sendInput(field));
@@ -298,36 +311,30 @@ public class GUIController_v2 {
 	
 	public void update() {
 		summaryField.appendText(game.getSummary());
-		summaryField.appendText("");
 		summaryField.setScrollTop(Double.MAX_VALUE);
+		clearHighlights();
 		
 		if (highlight) {
-			clearHighlights();
-			placeHiglights(game.getHighlights());
+			placeHighlights(game.getHighlights());
+		} 
+		else {
+			placeHighlightedPiece();
 		}
 		updateUserBoard(game.getBoard());
 	}
 
 	private void clearHighlights() {
-		boolean whiteSquare = true;
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
-				fields[x][y].setStyle(whiteSquare ? "-fx-background-color: WHITE" 
-						: "-fx-background-color: GRAY" );
-				whiteSquare = !whiteSquare;
-			}
-			whiteSquare = !whiteSquare;
+		for (int[] xyTuple : currentHighlights) {
+			fields[xyTuple[0]][xyTuple[1]].setStyle(colors[xyTuple[0]][xyTuple[1]]);
 		}
 	}
 
-	private void placeHiglights(Collection<int[]> highlights) {
+	private void placeHighlights(Collection<int[]> highlights) {
 		for (int[] xyTuple : highlights) {
+			currentHighlights.add(xyTuple);
 			fields[xyTuple[0]][xyTuple[1]].setStyle("-fx-background-color: LIGHTBLUE");
 		}
-		chessPiece piece = game.getHighlightedPiece();
-		if (piece != null) {
-			fields[piece.getXCoordinate()][piece.getYCoordinate()].setStyle("-fx-background-color: LIGHTPINK");
-		}
+		placeHighlightedPiece();
 	}
 
 	@FXML
@@ -367,12 +374,21 @@ public class GUIController_v2 {
 	
 	public void toggleHighlights() {
 		highlight = !highlight;
-		highlightToggle.setText(highlight ? "Switch higlights[OFF]" : "Switch higlights[ON]");
+		highlightToggle.setText(highlight ? "Switch highlight[OFF]" : "Switch highlight[ON]");
 		if (highlight) {
-			placeHiglights(game.getHighlights());
+			placeHighlights(game.getHighlights());
 		}
 		else {
 			clearHighlights();
+			placeHighlightedPiece();
+		}
+	}
+
+	private void placeHighlightedPiece() {
+		int[] piece = game.getHighlightedPiece();
+		if (piece != null) {
+			currentHighlights.add(piece);
+			fields[piece[0]][piece[1]].setStyle("-fx-background-color: LIGHTPINK");
 		}
 	}
 }

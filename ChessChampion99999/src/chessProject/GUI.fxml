@@ -309,7 +309,7 @@
                   <Font size="17.0" />
                </font>
             </TextArea>
-            <Button fx:id="highlightToggle" layoutX="-2.0" layoutY="464.0" mnemonicParsing="false" onAction="#toggleHighlights" prefHeight="51.0" prefWidth="205.0" text="Switch higlights[OFF]">
+            <Button fx:id="highlightToggle" layoutX="-2.0" layoutY="464.0" mnemonicParsing="false" onAction="#toggleHighlights" prefHeight="51.0" prefWidth="205.0" text="Switch highlight[OFF]">
                <font>
                   <Font size="19.0" />
                </font>

@@ -14,19 +14,14 @@ import java.util.function.Predicate;
 public class ChessBoard_v2{	
 	private boolean whiteToMove = true;
 	private boolean highlighting  = true;
-	private chessPiece whiteKing, blackKing;
 	private String summary = "";
-	private boolean inCheck = false;
-	private boolean mustMoveKing = false;
-	private boolean promotingPawn = false;
-	private chessPiece checkingEnemy = null;
-	private chessPiece promotingPiece = null;
+	private boolean inCheck, mustMoveKing, promotingPawn;
 	private chessPiece[][] chessBoard = new chessPiece[8][8];
 	private chessPiece[][] copyOfBoard = new chessPiece[8][8];
+	private chessPiece checkingEnemy, highlightedPiece , promotingPiece, whiteKing, blackKing;
 	private final List<List<Set<chessPiece>>> threatBoard = new ArrayList<>();
-	private Collection<int[]> highlights = new ArrayList<>();
-	private Map<Pawn, Collection<int[]>> pawnMoves = new HashMap<>();
-	private chessPiece highlightedPiece = null;
+	private final Collection<int[]> highlights = new ArrayList<>();
+	private final Map<Pawn, Collection<int[]>> pawnMoves = new HashMap<>();
 	private String moveString = "";
 
 	public ChessBoard_v2() {
@@ -50,9 +45,9 @@ public class ChessBoard_v2{
 				chessPiece rook = currentX - x > 0 ? chessBoard[0][currentY]
 				: chessBoard[7][currentY];
 				
-				chessBoard[rook.getXCoordinate()][rook.getYCoordinate()] = null;
-				chessBoard[rook.getXCoordinate() + (currentX - x > 0 ? 3 : -2)][currentY] = rook;
-				rook.setCoordinates(rook.getXCoordinate() + (currentX - x > 0 ? 3 : -2) ,currentY);
+				chessBoard[rook.getXCoordinate()][currentY] = null;
+				chessBoard[(currentX - x > 0 ? 3 : 5)][currentY] = rook;
+				rook.setCoordinates((currentX - x > 0 ? 3 : 5) ,currentY);
 			} 
 			
 			chessBoard[piece.getXCoordinate()][piece.getYCoordinate()] = null;
@@ -105,7 +100,7 @@ public class ChessBoard_v2{
 			moveString += surrounded && mustMoveKing ? "#" : "+";
 		}
 		
-		summary += moveString + "\n" + (whiteToMove ? "White to move\n" : "Black to move\n") + this.toString() + "\n\n";
+		summary += moveString + "\n" + (whiteToMove ? "White to move:\n" : "Black to move:\n") + this.toString() + "\n\n";
 		
 		if (surrounded) {
 			if (mustMoveKing) {
@@ -262,7 +257,7 @@ public class ChessBoard_v2{
 						if (y < 0 || y > 7 || (y == kingY && enemyY == kingY) ||
 							Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)
 							&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
-							&& !(x == enemyX && y == enemyY)) {continue yloop;}
+							&& !(x == enemyX && y == enemyY) && checkingEnemy instanceof Pawn) {continue yloop;}
 						if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
 							&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
 						{
@@ -601,8 +596,9 @@ public class ChessBoard_v2{
 		return this.highlights;
 	}
 	
-	public chessPiece getHighlightedPiece() {
-		return highlightedPiece;
+	public int[] getHighlightedPiece() {
+		return highlightedPiece != null ? new int[] {highlightedPiece.getXCoordinate(),
+			highlightedPiece.getYCoordinate()} : null;
 	}
 	
 	public chessPiece[][] getBoard() {
