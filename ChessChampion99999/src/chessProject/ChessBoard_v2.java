@@ -395,10 +395,10 @@ public class ChessBoard_v2{
 						}
 						for (int[] threat : threats) {
 							if (threatBoard.get(threat[0]).get(threat[1]).contains(chessPiece)) {
-								if ((chessBoard[threat[0]][threat[1]] == null || chessBoard[threat[0]]
-								[threat[1]].isWhitePiece() != chessPiece.isWhitePiece()) || !dynamicValueWasX &&
-								(!(chessPiece instanceof Pawn) || chessBoard[threat[0]][threat[1]] != null 
-								&& chessBoard[threat[0]][threat[1]].isWhitePiece() != chessPiece.isWhitePiece()))
+								if (((chessBoard[threat[0]][threat[1]] == null || chessBoard[threat[0]]
+								[threat[1]].isWhitePiece() != chessPiece.isWhitePiece())) && !(chessPiece instanceof Pawn)
+								|| !dynamicValueWasX && chessPiece instanceof Pawn && chessBoard[threat[0]][threat[1]] != null 
+								&& chessBoard[threat[0]][threat[1]].isWhitePiece() != chessPiece.isWhitePiece())
 								{
 									highlights.add(threat);
 								}
