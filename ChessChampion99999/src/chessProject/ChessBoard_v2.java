@@ -257,7 +257,7 @@ public class ChessBoard_v2{
 						if (y < 0 || y > 7 || (y == kingY && enemyY == kingY) ||
 							Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)
 							&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
-							&& !(x == enemyX && y == enemyY && checkingEnemy instanceof Pawn)) {continue yloop;}
+							&& !(x == enemyX && y == enemyY) && !(checkingEnemy instanceof Pawn)) {continue yloop;}
 						if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
 							&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
 						{
