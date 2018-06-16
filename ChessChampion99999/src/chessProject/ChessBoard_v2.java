@@ -99,7 +99,6 @@ public class ChessBoard_v2{
 			highlightedPiece = whiteToMove ? whiteKing : blackKing;
 			moveString += surrounded && mustMoveKing ? "#" : "+";
 		}
-		
 		summary += moveString + "\n" + (whiteToMove ? "White to move:\n" : "Black to move:\n") + this.toString() + "\n\n";
 		
 		if (surrounded) {
@@ -537,7 +536,7 @@ public class ChessBoard_v2{
 				final int finalX = dynamicValueWasX ? dynamicValue : kingX;
 				final int finalY =  dynamicValueWasX ? kingY : dynamicValue;
 				
-				if ((!dynamicValueWasX && savingPawnAt(finalX,finalY)) || savingPieceAt(finalX, finalY)) {
+				if (dynamicValueWasX && savingPawnAt(finalX,finalY) || savingPieceAt(finalX, finalY)) {
 					return true;
 				}
 			}			
