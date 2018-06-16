@@ -569,8 +569,9 @@ public class ChessBoard_v2{
 		}
 		
 		return !threatenedIndexes.stream().anyMatch(g -> threatBoard.get(g[0]).get(g[1]).stream()
-			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King) && (!(d instanceof Pawn)
-			|| chessBoard[g[0]][g[1]] != null || pawnMoves.get(d).stream().anyMatch(a -> a[0] == g[0] && a[1] == g[1]))));
+			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King) && !(d instanceof Pawn
+			&& chessBoard[g[0]][g[1]] == null)) || pawnMoves.entrySet().stream().filter(e -> e.getKey().isWhitePiece()
+			== whiteToMove).map(Entry::getValue).anyMatch(m -> m.stream().anyMatch(a-> a[0] == g[0] && a[1] == g[1])));
 	}
 			
 	public chessPiece getPiece(int x, int y) {
