@@ -280,7 +280,7 @@ public class ChessBoard_v2{
 						
 						if (threatBoard.get(finalValueX).get(finalValueY).contains(chessPiece)
 							&& (!(chessPiece instanceof Pawn) || (chessBoard[finalValueX][finalValueY] != null)) 
-							|| chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
+							|| dynamicValueWasX && chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
 							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY)) 
 						{
 							highlights.add(new int[]{finalValueX, finalValueY});
@@ -337,15 +337,17 @@ public class ChessBoard_v2{
 			}
 			if (!((King)king).getHasMoved() && !inCheck) {
 				for (int x = -1; x < 2; x+=2) {
-					int coefficient = kingX + x;
-					while(coefficient != (x == -1 ? -1 : 8)) {
-						if (chessBoard[coefficient][kingY] != null) {
-							if (chessBoard[coefficient][kingY] instanceof Rook && !((Rook)chessBoard[coefficient][kingY]).getHasMoved()) {
-								highlights.add(new int[]{kingX + (x == -1 ? -2 : 2 ),kingY});
+					int index = kingX + x;
+					while(index >= 0 && index < 8) {
+						if (chessBoard[index][kingY] != null) {
+							if (chessBoard[index][kingY] instanceof Rook && !((Rook)chessBoard[index][kingY]).getHasMoved()) {
+								highlights.add(new int[]{kingX + (x == -1 ? -2 : 2),kingY});
 							}
 							break;
 						}
-						coefficient += x;
+						if (Math.abs(kingX - index) < 3 && threatBoard.get(index).get(kingY).stream()
+								.anyMatch(b -> b.isWhitePiece() != whiteToMove)) {break;}
+						index += x;
 					}
 				}
 			}
