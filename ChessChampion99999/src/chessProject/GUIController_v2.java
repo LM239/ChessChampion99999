@@ -3,6 +3,7 @@ package chessProject;
 import java.util.Collection;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -145,9 +146,13 @@ public class GUIController_v2 {
 	@FXML StackPane sixzero;
 	@FXML StackPane sevenzero;
 	
-	Image nothing;
+	@FXML Button highlightToggle;
+	
+	private Image nothing;
 
-	ChessBoard_v2 game;
+	private ChessBoard_v2 game;
+	
+	private boolean highlight = true;
 
 	public void initialize() {
 		game = new ChessBoard_v2();
@@ -296,8 +301,10 @@ public class GUIController_v2 {
 		summaryField.appendText("");
 		summaryField.setScrollTop(Double.MAX_VALUE);
 		
-		clearHighlights();
-		placeHiglights(game.getHighlights());
+		if (highlight) {
+			clearHighlights();
+			placeHiglights(game.getHighlights());
+		}
 		updateUserBoard(game.getBoard());
 	}
 
@@ -307,9 +314,9 @@ public class GUIController_v2 {
 			for (int y = 0; y < 8; y++) {
 				fields[x][y].setStyle(whiteSquare ? "-fx-background-color: WHITE" 
 						: "-fx-background-color: GRAY" );
-				whiteSquare = whiteSquare ? false : true;
+				whiteSquare = !whiteSquare;
 			}
-			whiteSquare = whiteSquare ? false : true;
+			whiteSquare = !whiteSquare;
 		}
 	}
 
@@ -355,6 +362,17 @@ public class GUIController_v2 {
 					ifields[x][y].setImage(piece.getImage());
 				}
 			}
+		}
+	}
+	
+	public void toggleHighlights() {
+		highlight = !highlight;
+		highlightToggle.setText(highlight ? "Switch higlights[OFF]" : "Switch higlights[ON]");
+		if (highlight) {
+			placeHiglights(game.getHighlights());
+		}
+		else {
+			clearHighlights();
 		}
 	}
 }
