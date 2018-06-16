@@ -251,10 +251,11 @@ public class ChessBoard_v2{
 			}
 			if (chessPiece instanceof King) {
 				for (int x = kingX - 1; x <= kingX + 1; x++) {
-					if (x < 0 || x > 7 || (x == kingX && enemyX == kingX)) {continue;}
+					if (x < 0 || x > 7) {continue;}
 					yloop:
 					for (int y = kingY - 1; y <= kingY + 1; y++) {
-						if (y < 0 || y > 7 || (y == kingY && enemyY == kingY) ||
+						if (y < 0 || y > 7 || (y == kingY && enemyY == kingY && x != enemyX) ||
+							(x == kingX && enemyX == kingX && y != enemyY) ||
 							Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)
 							&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
 							&& !(x == enemyX && y == enemyY) && !(checkingEnemy instanceof Pawn)) {continue yloop;}
