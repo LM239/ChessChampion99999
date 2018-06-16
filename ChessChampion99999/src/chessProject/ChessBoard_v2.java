@@ -259,6 +259,7 @@ public class ChessBoard_v2{
 							Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)
 							&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
 							&& !(x == enemyX && y == enemyY) && !(checkingEnemy instanceof Pawn)) {continue yloop;}
+						
 						if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
 							&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
 						{
@@ -307,17 +308,14 @@ public class ChessBoard_v2{
 						enemyX += coefficientX;
 						enemyY += coefficientY;
 					}
-					
 					if (checkingEnemy instanceof Pawn && chessPiece instanceof Pawn) {
 						pawnMoves.get(chessPiece).stream().filter(a -> a[0] == checkingEnemy.getXCoordinate()
 						&& a[1] == checkingEnemy.getYCoordinate() - ((Pawn)chessPiece).getCoefficient())
 						.forEach(b -> highlights.add(b));
 					}
 				} 
-				else {
-					if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece)) {
-						highlights.add(new int[] {enemyX,enemyY});
-					}
+				else if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece)) {
+					highlights.add(new int[] {enemyX,enemyY});
 				}
 				return;
 			}
@@ -380,32 +378,21 @@ public class ChessBoard_v2{
 					chessPiece potentialEnemy = chessBoard[finalX][finalY];
 					if((potentialEnemy instanceof Rook || potentialEnemy instanceof Queen)
 						&& potentialEnemy.isWhitePiece() != whiteToMove) {
-						Collection<int[]> threats = new ArrayList<>();
-							
+												
 						int dynamicIndex = dynamicValueWasX ? kingX : kingY;
 						while (dynamicIndex >= 0 && dynamicIndex <= 7) {
 							dynamicIndex += coefficient;
-							
 							final int finalKingX = dynamicValueWasX ? dynamicIndex : kingX;
 							final int finalKingY = dynamicValueWasX ?  kingY : dynamicIndex;
-								
-							if (chessBoard[finalKingX][finalKingY] == null || chessBoard[finalKingX][finalKingY].isWhitePiece() != whiteToMove) {
-								threats.add(new int[]{finalKingX,finalKingY});
-							} 
-							if ((chessBoard[finalKingX][finalKingY] != null && chessBoard[finalKingX]
-									[finalKingY].isWhitePiece() != whiteToMove)) {break;}
-						}
-						for (int[] threat : threats) {
-							if (threatBoard.get(threat[0]).get(threat[1]).contains(chessPiece)) {
-								if (((chessBoard[threat[0]][threat[1]] == null || chessBoard[threat[0]]
-								[threat[1]].isWhitePiece() != chessPiece.isWhitePiece())) && !(chessPiece instanceof Pawn)
-								|| !dynamicValueWasX && chessPiece instanceof Pawn && chessBoard[threat[0]][threat[1]] != null 
-								&& chessBoard[threat[0]][threat[1]].isWhitePiece() != chessPiece.isWhitePiece())
+							if (chessBoard[finalKingX][finalKingY] == null || (chessBoard[finalKingX][finalKingY].isWhitePiece() != whiteToMove
+								&& threatBoard.get(finalKingX).get(finalKingY).contains(chessPiece)) && 
+								(!(chessPiece instanceof Pawn || !dynamicValueWasX && chessBoard[finalKingX][finalKingY] != null 
+								&& chessBoard[finalKingX][finalKingY].isWhitePiece() != chessPiece.isWhitePiece())))
 								{
-									highlights.add(threat);
+									highlights.add(new int[] {finalKingX, finalKingY});
 								}
-						
-							}
+							if (chessBoard[finalKingX][finalKingY] != null && chessBoard[finalKingX]
+									[finalKingY].isWhitePiece() != whiteToMove) {break;}
 						}
 						if (chessPiece instanceof Pawn && !dynamicValueWasX) {
 							pawnMoves.get(chessPiece).stream().filter(b -> b[0] == kingX).forEach(a -> highlights.add(a));
@@ -443,30 +430,23 @@ public class ChessBoard_v2{
 					chessPiece potentialEnemy = chessBoard[pieceX][pieceY];
 					if(potentialEnemy.isWhitePiece() != whiteToMove && 
 						(potentialEnemy instanceof Bishop || potentialEnemy instanceof Queen)) {
-						Collection<int[]> threats = new ArrayList<>();
 						int indexX = kingX;
 						int indexY = kingY;
 						while (indexX >= 0 && indexX <= 7 && indexY >= 0 && indexY <= 7 && !(chessBoard[indexX][indexY] != null 
 								&& chessBoard[indexX][indexY].isWhitePiece() != whiteToMove)) {
 							indexX += coefficientX;
 							indexY += coefficientY;
-							if (chessBoard[indexX][indexY] == null || chessBoard[indexX][indexY].isWhitePiece() != whiteToMove) {
-								threats.add(new int[]{indexX,indexY});
+							if (chessBoard[indexX][indexY] == null || (chessBoard[indexX][indexY].isWhitePiece() != whiteToMove &&
+								threatBoard.get(indexX).get(indexY).contains(chessPiece)) && (!(chessPiece instanceof Pawn || chessBoard[indexX][indexY] != null 
+								&& chessBoard[indexX][indexX].isWhitePiece() != chessPiece.isWhitePiece()))) 
+							{
+								highlights.add(new int[] {indexX,indexY});	
 							}
-						}
-						for (int[] threat : threats) {
-							if (threatBoard.get(threat[0]).get(threat[1]).contains(chessPiece) &&
-								(chessBoard[threat[0]][threat[1]] == null || chessBoard[threat[0]][threat[1]].isWhitePiece() != chessPiece.isWhitePiece()) &&
-								(!(chessPiece instanceof Pawn) || chessBoard[threat[0]][threat[1]] != null 
-								&& chessBoard[threat[0]][threat[1]].isWhitePiece() != chessPiece.isWhitePiece()))
-								{
-									highlights.add(threat);
-								}
 						}
 						if (chessPiece instanceof Pawn) {
 							pawnMoves.get(chessPiece).stream().filter(a -> Math.abs(a[0] - kingX) 
-							== Math.abs(a[1] - kingY)).filter(b -> (b[0] - kingX > 0 ? 1 : -1) == coefficientX && 
-							(b[1] - kingY > 0 ? 1 : -1) == coefficientY).forEach(c -> highlights.add(c));
+							== Math.abs(a[1] - kingY) && (a[0] - kingX > 0 ? 1 : -1) == coefficientX && 
+							(a[1] - kingY > 0 ? 1 : -1) == coefficientY).forEach(c -> highlights.add(c));
 						}
 						return;
 					} 
@@ -547,7 +527,6 @@ public class ChessBoard_v2{
 		int kingY = king.getYCoordinate();
 		int enemyX = enemy.getXCoordinate();
 		int enemyY = enemy.getYCoordinate();
-		List<int[]> threatenedIndexes = new ArrayList<>();
 		if (kingX == enemyX || kingY == enemyY) {
 			int dynamicValue = enemyX != kingX ? enemyX : enemyY;
 			boolean dynamicValueWasX = enemyX != kingX;
@@ -555,7 +534,12 @@ public class ChessBoard_v2{
 			while (dynamicValueWasX && Math.abs(kingX - dynamicValue) != 1 ||
 					!dynamicValueWasX && Math.abs(kingY - dynamicValue) != 1) {
 				dynamicValue += coefficient;
-				threatenedIndexes.add(new int[]{dynamicValueWasX ? dynamicValue : kingX , dynamicValueWasX ? kingY : dynamicValue});
+				final int finalX = dynamicValueWasX ? dynamicValue : kingX;
+				final int finalY =  dynamicValueWasX ? kingY : dynamicValue;
+				
+				if ((!dynamicValueWasX && savingPawnAt(finalX,finalY)) || savingPieceAt(finalX, finalY)) {
+					return true;
+				}
 			}			
 		} 
 		else {
@@ -564,14 +548,22 @@ public class ChessBoard_v2{
 			while (Math.abs(kingX - enemyX) != 1) {
 				enemyX += coefficientX;
 				enemyY += coefficientY;
-				threatenedIndexes.add(new int[]{enemyX,enemyY});
+				if (savingPawnAt(enemyX,enemyY) || savingPieceAt(enemyX, enemyY)) {
+					return true;
+				}
 			}
 		}
-		
-		return !threatenedIndexes.stream().anyMatch(g -> threatBoard.get(g[0]).get(g[1]).stream()
-			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King) && !(d instanceof Pawn
-			&& chessBoard[g[0]][g[1]] == null)) || pawnMoves.entrySet().stream().filter(e -> e.getKey().isWhitePiece()
-			== whiteToMove).map(Entry::getValue).anyMatch(m -> m.stream().anyMatch(a-> a[0] == g[0] && a[1] == g[1])));
+		return false;
+	}
+	
+	private boolean savingPawnAt(int x, int y) {
+		return pawnMoves.entrySet().stream().filter(e -> e.getKey().isWhitePiece()
+				== whiteToMove).map(Entry::getValue).anyMatch(m -> m.stream().anyMatch(a-> a[0] == x && a[1] == y));
+	}
+	
+	private boolean savingPieceAt(int x, int y) {
+		return threatBoard.get(x).get(y).stream().anyMatch(d -> d.isWhitePiece() == whiteToMove 
+			&& !(d instanceof King) && !(d instanceof Pawn && chessBoard[x][y] == null));
 	}
 			
 	public chessPiece getPiece(int x, int y) {
