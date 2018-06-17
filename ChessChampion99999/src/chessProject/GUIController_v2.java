@@ -155,7 +155,6 @@ public class GUIController_v2 {
 	
 	private boolean highlight = true;
 	private Collection<int[]> currentHighlights = new ArrayList<>();
-	private String[][] colors = new String[8][8];
 
 	public void initialize() {
 		game = new ChessBoard_v2();
@@ -291,16 +290,6 @@ public class GUIController_v2 {
 		
 		nothing = new Image(GUIController_v2.class.getResource("/nothing.png").toExternalForm());
 		
-		boolean whiteSquare = true;
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
-				colors[x][y] = (whiteSquare ? "-fx-background-color: WHITE" 
-						: "-fx-background-color: GRAY");
-				whiteSquare = !whiteSquare;
-			}
-			whiteSquare = !whiteSquare;
-		}
-		
 		for (ImageView[] fieldRow : ifields) {
 			for (ImageView field : fieldRow) {
 				field.setOnMouseClicked(e -> sendInput(field));
@@ -325,7 +314,8 @@ public class GUIController_v2 {
 
 	private void clearHighlights() {
 		for (int[] xyTuple : currentHighlights) {
-			fields[xyTuple[0]][xyTuple[1]].setStyle(colors[xyTuple[0]][xyTuple[1]]);
+			fields[xyTuple[0]][xyTuple[1]].setStyle((xyTuple[0] + xyTuple[1] + 2)%2 == 0 ?
+					"-fx-background-color: GRAY" : "-fx-background-color: WHITE" );
 		}
 	}
 

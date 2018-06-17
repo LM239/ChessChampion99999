@@ -273,8 +273,7 @@ public class ChessBoard_v2{
 					int dynamicValue = enemyX != kingX ? enemyX : enemyY;
 					boolean dynamicValueWasX = enemyX != kingX;
 					int coefficient = dynamicValueWasX && enemyX - kingX > 0 || !dynamicValueWasX && enemyY - kingY > 0 ? -1 : 1;
-					while (true) {
-						if ((dynamicValueWasX ? kingX : kingY)-dynamicValue == 0) {break;}
+					while ((dynamicValueWasX ? kingX : kingY)-dynamicValue != 0) {
 						final int finalValueX = dynamicValueWasX ? dynamicValue : enemyX;
 						final int finalValueY = dynamicValueWasX ? enemyY : dynamicValue;
 						
@@ -535,10 +534,10 @@ public class ChessBoard_v2{
 					!dynamicValueWasX && Math.abs(kingY - dynamicValue) != 1) {
 				dynamicValue += coefficient;
 				final int finalX = dynamicValueWasX ? dynamicValue : kingX;
-				final int finalY =  dynamicValueWasX ? kingY : dynamicValue;
+				final int finalY = dynamicValueWasX ? kingY : dynamicValue;
 				
 				if (dynamicValueWasX && savingPawnAt(finalX,finalY) || savingPieceAt(finalX, finalY)) {
-					return true;
+					return false;
 				}
 			}			
 		} 
@@ -549,11 +548,11 @@ public class ChessBoard_v2{
 				enemyX += coefficientX;
 				enemyY += coefficientY;
 				if (savingPawnAt(enemyX,enemyY) || savingPieceAt(enemyX, enemyY)) {
-					return true;
+					return false;
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	private boolean savingPawnAt(int x, int y) {
@@ -627,4 +626,5 @@ public class ChessBoard_v2{
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
 	}
+	
 }
