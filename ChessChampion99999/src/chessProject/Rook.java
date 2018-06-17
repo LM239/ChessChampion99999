@@ -2,7 +2,7 @@ package chessProject;
 
 import javafx.scene.image.Image;
 
-public class Rook extends chessPiece{
+public class Rook extends advancedChessPiece{
 	private boolean hasMoved = false;
 
 	public Rook(int x, int y, boolean white) {

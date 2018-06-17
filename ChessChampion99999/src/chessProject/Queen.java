@@ -2,7 +2,7 @@ package chessProject;
 
 import javafx.scene.image.Image;
 
-public class Queen extends chessPiece {
+public class Queen extends advancedChessPiece {
 
 	public Queen(int x, int y, boolean white) {
 		super(x, y, white, chessBoard);
@@ -16,10 +16,5 @@ public class Queen extends chessPiece {
 	protected void placeThreats(chessPiece[][] board) {
 		super.placeThreatsDiagonal(board);
 		super.placeThreatsHorisontal(board);
-	}
-	
-	@Override
-	protected boolean legalMove(int x, int y) {
-		return (super.legalMove(x, y) && chessBoard.getThreatBoard().get(x).get(y).contains(this));
 	}
 }

@@ -12,10 +12,6 @@ public class Knight extends chessPiece {
 		pieceImg = new Image(chessPiece.class.getResource(white ? "/WN.png" : "/BN.png").toExternalForm());
 	}
 	
-	@Override
-	protected boolean legalMove(int x, int y) {
-		return (super.legalMove(x, y) && chessBoard.getThreatBoard().get(x).get(y).contains(this));
-	}
 
 	@Override
 	protected void placeThreats(chessPiece[][] board) {
