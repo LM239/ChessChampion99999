@@ -382,7 +382,7 @@ public class ChessBoard_v2{
 							dynamicIndex += coefficient;
 							final int finalKingX = dynamicValueWasX ? dynamicIndex : kingX;
 							final int finalKingY = dynamicValueWasX ?  kingY : dynamicIndex;
-							if (chessBoard[finalKingX][finalKingY] == null || (chessBoard[finalKingX][finalKingY].isWhitePiece() != whiteToMove
+							if ((chessBoard[finalKingX][finalKingY] == null || (chessBoard[finalKingX][finalKingY].isWhitePiece() != whiteToMove)
 								&& threatBoard.get(finalKingX).get(finalKingY).contains(chessPiece)) && 
 								(!(chessPiece instanceof Pawn || !dynamicValueWasX && chessBoard[finalKingX][finalKingY] != null 
 								&& chessBoard[finalKingX][finalKingY].isWhitePiece() != chessPiece.isWhitePiece())))
@@ -434,8 +434,8 @@ public class ChessBoard_v2{
 								&& chessBoard[indexX][indexY].isWhitePiece() != whiteToMove)) {
 							indexX += coefficientX;
 							indexY += coefficientY;
-							if (chessBoard[indexX][indexY] == null || (chessBoard[indexX][indexY].isWhitePiece() != whiteToMove &&
-								threatBoard.get(indexX).get(indexY).contains(chessPiece)) && (!(chessPiece instanceof Pawn || chessBoard[indexX][indexY] != null 
+							if ((chessBoard[indexX][indexY] == null || chessBoard[indexX][indexY].isWhitePiece() != whiteToMove) &&
+								threatBoard.get(indexX).get(indexY).contains(chessPiece) && (!(chessPiece instanceof Pawn || chessBoard[indexX][indexY] != null 
 								&& chessBoard[indexX][indexY].isWhitePiece() != chessPiece.isWhitePiece()))) 
 							{
 								highlights.add(new int[] {indexX,indexY});	
