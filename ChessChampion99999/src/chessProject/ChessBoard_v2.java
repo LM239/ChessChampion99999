@@ -625,20 +625,4 @@ public class ChessBoard_v2{
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
 	}
-	
-	public static void main(String[] args) {
-		ChessBoard_v2 game = new ChessBoard_v2();
-		game.getInput(4,1);
-		game.getInput(4,3);
-		game.getInput(4,6);
-		game.getInput(4,4);
-		game.getInput(3,0);
-		game.getInput(7,4);
-		game.getInput(3,7);
-		game.getInput(7,3);
-		game.getInput(7,4);
-		game.getInput(4,4);
-		game.getInput(7,3);
-	}
-	
 }
