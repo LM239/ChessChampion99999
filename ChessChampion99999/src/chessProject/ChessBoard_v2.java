@@ -137,8 +137,7 @@ public class ChessBoard_v2{
 			if (x != piece.getXCoordinate()) {
 				result = Character.toString(("abcdefgh".charAt(piece.getXCoordinate()))) + "x";
 			}
-			result += Character.toString(("abcdefgh".charAt(x))) + Integer.toString(y+1);
-			return result;
+			return result + Character.toString(("abcdefgh".charAt(x))) + Integer.toString(y+1);
 		} 
 		Predicate<chessPiece> g = null;
 		if(piece instanceof King) {
@@ -161,7 +160,8 @@ public class ChessBoard_v2{
 			else {
 				result += Character.toString(("abcdefgh".charAt(piece.getXCoordinate())));
 			}
-		} catch (NoSuchElementException e) {
+		} 
+		catch (NoSuchElementException e) {
 		
 		}
 		if (chessBoard[x][y] != null) {
@@ -278,8 +278,8 @@ public class ChessBoard_v2{
 						final int finalValueY = dynamicValueWasX ? enemyY : dynamicValue;
 						
 						if (threatBoard.get(finalValueX).get(finalValueY).contains(chessPiece)
-							&& (!(chessPiece instanceof Pawn) || (chessBoard[finalValueX][finalValueY] != null)) 
-							|| dynamicValueWasX && chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
+							&& (!(chessPiece instanceof Pawn) || chessBoard[finalValueX][finalValueY] != null) 
+							|| chessPiece instanceof Pawn && dynamicValueWasX && pawnMoves.get(chessPiece).stream()
 							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY)) 
 						{
 							highlights.add(new int[]{finalValueX, finalValueY});
@@ -296,8 +296,8 @@ public class ChessBoard_v2{
 						final int finalValueX = enemyX;
 						final int finalValueY = enemyY;
 						
-						if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece) && (!(chessPiece instanceof Pawn) || 
-							(chessBoard[enemyX][enemyY] != null))
+						if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece) && 
+							(!(chessPiece instanceof Pawn) || chessBoard[enemyX][enemyY] != null)
 							|| chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
 							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY))
 						{
@@ -382,10 +382,9 @@ public class ChessBoard_v2{
 							dynamicIndex += coefficient;
 							final int finalKingX = dynamicValueWasX ? dynamicIndex : kingX;
 							final int finalKingY = dynamicValueWasX ?  kingY : dynamicIndex;
-							if ((chessBoard[finalKingX][finalKingY] == null || (chessBoard[finalKingX][finalKingY].isWhitePiece() != whiteToMove)
-								&& threatBoard.get(finalKingX).get(finalKingY).contains(chessPiece)) && 
-								(!(chessPiece instanceof Pawn || !dynamicValueWasX && chessBoard[finalKingX][finalKingY] != null 
-								&& chessBoard[finalKingX][finalKingY].isWhitePiece() != chessPiece.isWhitePiece())))
+							if (!(chessPiece instanceof Pawn) && (chessBoard[finalKingX][finalKingY] == null
+								|| chessBoard[finalKingX][finalKingY].isWhitePiece() != whiteToMove)
+								&& threatBoard.get(finalKingX).get(finalKingY).contains(chessPiece))
 							{
 								highlights.add(new int[] {finalKingX, finalKingY});
 							}
@@ -435,8 +434,8 @@ public class ChessBoard_v2{
 							indexX += coefficientX;
 							indexY += coefficientY;
 							if ((chessBoard[indexX][indexY] == null || chessBoard[indexX][indexY].isWhitePiece() != whiteToMove) &&
-								threatBoard.get(indexX).get(indexY).contains(chessPiece) && (!(chessPiece instanceof Pawn || chessBoard[indexX][indexY] != null 
-								&& chessBoard[indexX][indexY].isWhitePiece() != chessPiece.isWhitePiece()))) 
+								threatBoard.get(indexX).get(indexY).contains(chessPiece) && (!(chessPiece instanceof Pawn) || chessBoard[indexX][indexY] != null 
+								&& chessBoard[indexX][indexY].isWhitePiece() != chessPiece.isWhitePiece()))
 							{
 								highlights.add(new int[] {indexX,indexY});	
 							}
@@ -625,6 +624,21 @@ public class ChessBoard_v2{
 		}
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
+	}
+	
+	public static void main(String[] args) {
+		ChessBoard_v2 game = new ChessBoard_v2();
+		game.getInput(4,1);
+		game.getInput(4,3);
+		game.getInput(4,6);
+		game.getInput(4,4);
+		game.getInput(3,0);
+		game.getInput(7,4);
+		game.getInput(3,7);
+		game.getInput(7,3);
+		game.getInput(7,4);
+		game.getInput(4,4);
+		game.getInput(7,3);
 	}
 	
 }
