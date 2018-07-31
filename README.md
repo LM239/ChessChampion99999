@@ -1,2 +1,2 @@
 # ChessChampion99999
-The most ultimate chess experience
+The most ultimate (sic) chess experience
