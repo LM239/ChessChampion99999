@@ -24,22 +24,24 @@ public abstract class advancedChessPiece extends chessPiece{
 	
 	protected void placeThreatsHorisontal(chessPiece[][] board) {
 		for (int x = -1; x < 2; x+=2) {
-			int index = 0;
-			while(true) {
-				index += x;
-				if (this.xCoordinate + index >= 0 && this.xCoordinate + index <= 7) {
-					chessBoard.updateThreatBoard(this.xCoordinate + index, this.yCoordinate, this);
-				} else {break;}
-				if(board[this.xCoordinate + index][this.yCoordinate] != null) {break;}
+			int index = x;
+			if (this.xCoordinate + index >= 0 && this.xCoordinate + index <= 7) {
+				while(board[this.xCoordinate + index][this.yCoordinate] == null) {
+					if (this.xCoordinate + index >= 0 && this.xCoordinate + index <= 7) {
+						chessBoard.updateThreatBoard(this.xCoordinate + index, this.yCoordinate, this);
+					} else {break;}
+					index += x;
+				}
 			}
-			index = 0;
-			while(true) {
-				index += x;
-				if (this.yCoordinate + index >= 0 && this.yCoordinate + index <= 7) {
-					chessBoard.updateThreatBoard(this.xCoordinate, this.yCoordinate + index, this);
-				} else {break;}
-				if(board[this.xCoordinate][this.yCoordinate + index] != null) {break;}
-			}
+			index = x;
+			if (this.yCoordinate + index >= 0 && this.yCoordinate + index <= 7) {
+				while(board[this.xCoordinate][this.yCoordinate + index] == null) {
+					if (this.yCoordinate + index >= 0 && this.yCoordinate + index <= 7) {
+						chessBoard.updateThreatBoard(this.xCoordinate, this.yCoordinate + index, this);
+					} else {break;}
+					index += x;
+				}
+			}			
 		}
 	}
 		
