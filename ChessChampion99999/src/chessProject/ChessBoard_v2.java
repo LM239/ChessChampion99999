@@ -23,6 +23,7 @@ public class ChessBoard_v2{
 	private final Collection<int[]> highlights = new ArrayList<>();
 	private final Map<Pawn, Collection<int[]>> pawnMoves = new HashMap<>();
 	private String moveString = "";
+	
 
 	public ChessBoard_v2() {
 		for (int i = 0; i < 8; i++) {
