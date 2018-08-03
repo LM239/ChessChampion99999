@@ -184,7 +184,7 @@ public class ChessBoard_v2{
 	}
 	
 	public void getInput(int x, int y) {
-		if (!promotingPawn &&!highlighting && highlights.stream().anyMatch(p -> p[0] == x && p[1] == y)) {
+		if (!highlighting && highlights.stream().anyMatch(p -> p[0] == x && p[1] == y) && !promotingPawn) {
 			updateBoard(highlightedPiece,x, y);
 		}
 		else if (!promotingPawn && chessBoard[x][y] != null && chessBoard[x][y].isWhitePiece() == whiteToMove) {
@@ -257,7 +257,7 @@ public class ChessBoard_v2{
 							(x == kingX && enemyX == kingX && y != enemyY) ||
 							Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)
 							&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
-							&& !(x == enemyX && y == enemyY) && !(checkingEnemy instanceof Pawn)) {continue yloop;}
+							&& !(x == enemyX && y == enemyY)) {continue yloop;}
 						
 						if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
 							&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
