@@ -114,11 +114,11 @@ public class ChessBoard_v2{
 			if (mustMoveKing) {
 				summary += "Check Mate!\n" + (whiteToMove ? "Black" : "White") + " wins!\nCongratulations!\n";
 			} 
-			else {
+			else if(!inCheck) {
 				for (chessPiece[] column : chessBoard) {
-					for (chessPiece pieceAtXY : column) {
-						if (pieceAtXY != null && pieceAtXY.isWhitePiece() == whiteToMove) {
-							saveHiglights(pieceAtXY);
+					for (chessPiece piece : column) {
+						if (piece != null && piece.isWhitePiece() == whiteToMove && !(piece instanceof King)) {
+							saveHiglights(piece);
 							if (highlights.size() > 0) {
 								highlights.clear();
 								return;
@@ -274,55 +274,53 @@ public class ChessBoard_v2{
 				}
 				return;
 			}
-			else {
-				if (kingX == enemyX || kingY == enemyY) {
-					int dynamicValue = enemyX != kingX ? enemyX : enemyY;
-					boolean dynamicValueWasX = enemyX != kingX;
-					int coefficient = dynamicValueWasX && enemyX - kingX > 0 || !dynamicValueWasX && enemyY - kingY > 0 ? -1 : 1;
-					while ((dynamicValueWasX ? kingX : kingY)-dynamicValue != 0) {
-						final int finalValueX = dynamicValueWasX ? dynamicValue : enemyX;
-						final int finalValueY = dynamicValueWasX ? enemyY : dynamicValue;
-						
-						if (threatBoard.get(finalValueX).get(finalValueY).contains(chessPiece)
-							&& (!(chessPiece instanceof Pawn) || chessBoard[finalValueX][finalValueY] != null) 
-							|| chessPiece instanceof Pawn && dynamicValueWasX && pawnMoves.get(chessPiece).stream()
-							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY)) 
-						{
-							highlights.add(new int[]{finalValueX, finalValueY});
-						}
-						dynamicValue += coefficient;
+			else if (kingX == enemyX || kingY == enemyY) {
+				int dynamicValue = enemyX != kingX ? enemyX : enemyY;
+				boolean dynamicValueWasX = enemyX != kingX;
+				int coefficient = dynamicValueWasX && enemyX - kingX > 0 || !dynamicValueWasX && enemyY - kingY > 0 ? -1 : 1;
+				while ((dynamicValueWasX ? kingX : kingY)-dynamicValue != 0) {
+					final int finalValueX = dynamicValueWasX ? dynamicValue : enemyX;
+					final int finalValueY = dynamicValueWasX ? enemyY : dynamicValue;
+					
+					if (threatBoard.get(finalValueX).get(finalValueY).contains(chessPiece)
+						&& (!(chessPiece instanceof Pawn) || chessBoard[finalValueX][finalValueY] != null) 
+						|| chessPiece instanceof Pawn && dynamicValueWasX && pawnMoves.get(chessPiece).stream()
+						.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY)) 
+					{
+						highlights.add(new int[]{finalValueX, finalValueY});
 					}
-				} 
-				else if (Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)) {
-					int coefficientX = enemyX - kingX > 0 ? -1 : 1;
-					int coefficientY = enemyY - kingY > 0 ? -1 : 1;
-						
-					while (true) {
-						if (enemyX-kingX == 0) {break;}
-						final int finalValueX = enemyX;
-						final int finalValueY = enemyY;
-						
-						if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece) && 
-							(!(chessPiece instanceof Pawn) || chessBoard[enemyX][enemyY] != null)
-							|| chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
-							.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY))
-						{
-							highlights.add(new int[] {enemyX,enemyY});
-						}
-						enemyX += coefficientX;
-						enemyY += coefficientY;
-					}
-					if (checkingEnemy == longMovedPawn && chessPiece instanceof Pawn) {
-						pawnMoves.get(chessPiece).stream().filter(a -> a[0] == checkingEnemy.getXCoordinate()
-						&& a[1] == checkingEnemy.getYCoordinate() + ((Pawn)chessPiece).getCoefficient())
-						.forEach(b -> highlights.add(b));
-					}
-				} 
-				else if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece)) {
-					highlights.add(new int[] {enemyX,enemyY});
+					dynamicValue += coefficient;
 				}
-				return;
+			} 
+			else if (Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)) {
+				int coefficientX = enemyX - kingX > 0 ? -1 : 1;
+				int coefficientY = enemyY - kingY > 0 ? -1 : 1;
+					
+				while (true) {
+					if (enemyX-kingX == 0) {break;}
+					final int finalValueX = enemyX;
+					final int finalValueY = enemyY;
+					
+					if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece) && 
+						(!(chessPiece instanceof Pawn) || chessBoard[enemyX][enemyY] != null)
+						|| chessPiece instanceof Pawn && pawnMoves.get(chessPiece).stream()
+						.anyMatch(a -> a[0] == finalValueX && a[1] == finalValueY))
+					{
+						highlights.add(new int[] {enemyX,enemyY});
+					}
+					enemyX += coefficientX;
+					enemyY += coefficientY;
+				}
+				if (checkingEnemy == longMovedPawn && chessPiece instanceof Pawn) {
+					pawnMoves.get(chessPiece).stream().filter(a -> a[0] == checkingEnemy.getXCoordinate()
+					&& a[1] == checkingEnemy.getYCoordinate() + ((Pawn)chessPiece).getCoefficient())
+					.forEach(b -> highlights.add(b));
+				}
+			} 
+			else if (threatBoard.get(enemyX).get(enemyY).contains(chessPiece)) {
+				highlights.add(new int[] {enemyX,enemyY});
 			}
+			return;
 		}
 		if (chessPiece instanceof King) {
 			for (int x = kingX - 1; x <= kingX + 1; x++) {
