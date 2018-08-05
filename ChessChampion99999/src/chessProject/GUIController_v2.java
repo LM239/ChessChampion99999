@@ -6,31 +6,24 @@ import java.util.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 public class GUIController_v2 {
-	@FXML ImageView field;
 	@FXML TextArea summaryField;
 	@FXML AnchorPane chessGame;
-	
 	@FXML Button highlightToggle;
 	
-	private Image nothing;
 	private ChessBoard_v2 game;
-	
 	private boolean highlight = true;
 	private Collection<int[]> currentHighlights = new ArrayList<>();
 
 	public void initialize() {
 		game = new ChessBoard_v2();
-		nothing = new Image(GUIController_v2.class.getResource("/nothing.png").toExternalForm());
-		
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x< 8; x++) {
-				ImageView imageField = ((ImageView) chessGame.lookup
-						("#i" + String.valueOf(x) + String.valueOf(y)));
+				ImageView imageField = (ImageView) chessGame.lookup
+						("#i" + String.valueOf(x) + String.valueOf(y));
 				imageField.setOnMouseClicked(e -> sendInput(imageField));
 			}
 		}
@@ -48,7 +41,14 @@ public class GUIController_v2 {
 		else {
 			placeHighlightedPiece();
 		}
-		updateUserBoard(game.getBoard());
+		
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				chessPiece piece = game.getBoard()[x][y];
+				((ImageView) chessGame.lookup("#i" + String.valueOf(x) + String.valueOf(y)))
+				.setImage(piece == null ? null : piece.getImage());	
+			}
+		}
 	}
 
 	private void clearHighlights() {
@@ -56,7 +56,7 @@ public class GUIController_v2 {
 			int x = xyTuple[0];
 			int y = xyTuple[1];
 			chessGame.lookup("#" + String.valueOf(x) + String.valueOf(y))
-			.setStyle((x + y + 2)%2 == 0 ? "-fx-background-color: GRAY" : "-fx-background-color: WHITE" );
+			.setStyle((x + y + 2)%2 == 0 ? "-fx-background-color: GRAY" : "-fx-background-color: WHITE");
 		}
 	}
 
@@ -70,25 +70,13 @@ public class GUIController_v2 {
 		placeHighlightedPiece();
 	}
 
-	@FXML
-	public void sendInput(ImageView field){
+	public void sendInput(ImageView field) {
 		int xCoor = Character.getNumericValue(field.getId().charAt(1));
 		int yCoor = Character.getNumericValue(field.getId().charAt(2));
 		
 		System.out.println("game.getInput(" + Integer.toString(xCoor) + "," + Integer.toString(yCoor) + ");");
 		game.getInput(xCoor,yCoor);
 		update();
-	}
-	
-	
-	private void updateUserBoard(chessPiece[][] board) {
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 8; x++) {
-				chessPiece piece = board[x][y];
-				((ImageView) chessGame.lookup("#i" + String.valueOf(x) + String.valueOf(y)))
-				.setImage(piece == null ? nothing : piece.getImage());	
-			}
-		}
 	}
 	
 	public void toggleHighlights() {
