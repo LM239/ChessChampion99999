@@ -35,10 +35,10 @@ public class Pawn extends chessPiece{
 	
 	private void placePawnMoves() {
 		Collection<int[]> coordinates = new ArrayList<>();
-		if (chessBoard.getBoard()[xCoordinate][yCoordinate + coefficient] == null) {
+		if (chessBoard.getPiece(xCoordinate,yCoordinate + coefficient) == null) {
 			coordinates.add(new int[] {xCoordinate, yCoordinate + coefficient});
 			
-			if (this.yCoordinate == (white ? 1 : 6) && chessBoard.getBoard()[xCoordinate][yCoordinate + 2*coefficient] == null) {
+			if (this.yCoordinate == (white ? 1 : 6) && chessBoard.getPiece(xCoordinate,yCoordinate + 2*coefficient) == null) {
 				coordinates.add(new int[] {xCoordinate, yCoordinate + 2*coefficient});
 			}
 		}
@@ -50,9 +50,7 @@ public class Pawn extends chessPiece{
 				}	
 			}
 		}
-		if (coordinates.size() > 0) {
-			chessBoard.updatePawnMoves(this, coordinates);
-		}
+		chessBoard.updatePawnMoves(this, coordinates);
 	}
 
 	@Override

@@ -23,7 +23,6 @@ public class ChessBoard_v2{
 	private final Collection<int[]> highlights = new ArrayList<>();
 	private final Map<Pawn, Collection<int[]>> pawnMoves = new HashMap<>();
 	private String moveString = "";
-	
 
 	public ChessBoard_v2() {
 		for (int i = 0; i < 8; i++) {
@@ -181,7 +180,7 @@ public class ChessBoard_v2{
 		threatBoard.stream().forEach(a -> a.stream().forEach(Set::clear));
 		
 		Arrays.stream(this.chessBoard).forEach(x -> Arrays.stream(x).filter(y -> y != null)
-				.forEach(c -> c.placeThreats(this.chessBoard)));
+			.forEach(c -> c.placeThreats(this.chessBoard)));
 	}
 	
 	public void getInput(int x, int y) {
@@ -260,7 +259,7 @@ public class ChessBoard_v2{
 							&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
 							&& !(x == enemyX && y == enemyY)) {continue yloop;}
 						
-						if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
+						if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != whiteToMove)
 							&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
 						{
 							highlights.add(new int[]{x,y});
@@ -325,7 +324,7 @@ public class ChessBoard_v2{
 				yloop:
 				for (int y = kingY - 1; y <= kingY + 1; y++) {
 					if (y < 0 || y > 7) {continue yloop;}
-					if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece())
+					if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != whiteToMove)
 						&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
 					{
 						highlights.add(new int[]{x,y});
@@ -436,7 +435,7 @@ public class ChessBoard_v2{
 							indexY += coefficientY;
 							if ((chessBoard[indexX][indexY] == null || chessBoard[indexX][indexY].isWhitePiece() != whiteToMove) &&
 								threatBoard.get(indexX).get(indexY).contains(chessPiece) && (!(chessPiece instanceof Pawn) || chessBoard[indexX][indexY] != null 
-								&& chessBoard[indexX][indexY].isWhitePiece() != chessPiece.isWhitePiece()))
+								&& chessBoard[indexX][indexY].isWhitePiece() != whiteToMove))
 							{
 								highlights.add(new int[] {indexX,indexY});	
 							}
@@ -458,15 +457,14 @@ public class ChessBoard_v2{
 		for (int x = 0; x < 8; x++) {
 			for (int y = 0; y < 8; y++) {
 				if (threatBoard.get(x).get(y).contains(chessPiece) && (chessBoard[x][y] == null 
-					|| chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece()) && 
+					|| chessBoard[x][y].isWhitePiece() != whiteToMove) && 
 					(!(chessPiece instanceof Pawn) || chessBoard[x][y] != null
-					&& chessBoard[x][y].isWhitePiece() != chessPiece.isWhitePiece()))
+					&& chessBoard[x][y].isWhitePiece() != whiteToMove))
 				{
 					highlights.add(new int[]{x,y});
 				}	
 			}
 		}
-		
 		if (chessPiece instanceof Pawn) {
 			pawnMoves.get(chessPiece).stream().forEach(a -> highlights.add(a));
 		}
@@ -483,8 +481,8 @@ public class ChessBoard_v2{
 			for (int o = kingY - 1; o <= kingY + 1; o++) {
 				if (o < 0 || o > 7) {continue yloop;}
 				if ((chessBoard[i][o] == null || chessBoard[i][o].isWhitePiece() != whiteToMove)
-						&& (threatBoard.get(i).get(o).stream().allMatch(p -> p.isWhitePiece() == whiteToMove))) {
-						return false;
+					&& (threatBoard.get(i).get(o).stream().allMatch(p -> p.isWhitePiece() == whiteToMove))) {
+					return false;
 				}
 			}
 		}
@@ -520,7 +518,6 @@ public class ChessBoard_v2{
 				(finalEnemyX + 1 < 8 && pawnMoves.get(chessBoard[finalEnemyX +1][finalEnemyY]).contains(l)
 				|| finalEnemyX - 1 >= 0 && pawnMoves.get(chessBoard[finalEnemyX -1][finalEnemyY]).contains(l))));
 		}
-		
 		
 		int kingX = king.getXCoordinate();
 		int kingY = king.getYCoordinate();
@@ -626,5 +623,4 @@ public class ChessBoard_v2{
 		summary += this.toString() + "\n\n";
 		updateThreatBoard();
 	}
-
 }
