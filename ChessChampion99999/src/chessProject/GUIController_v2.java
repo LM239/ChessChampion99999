@@ -9,7 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-public class GUIController_v2 {
+public class GUIController_v2 implements engineListener{
 	@FXML TextArea summaryField;
 	@FXML AnchorPane chessGame;
 	@FXML Button highlightToggle;
@@ -49,6 +49,7 @@ public class GUIController_v2 {
 				.setImage(piece == null ? null : piece.getImage());	
 			}
 		}
+		game.checkEngine();
 	}
 
 	private void clearHighlights() {
@@ -98,5 +99,23 @@ public class GUIController_v2 {
 			chessGame.lookup("#" + String.valueOf(piece[0]) + String.valueOf(piece[1]))
 			.setStyle("-fx-background-color: LIGHTPINK");
 		}
+	}
+	
+	private void startChessEngine(boolean isWhite) {
+		game.setEngineListener(this);
+		game.setEngineAs(isWhite);
+	}
+	
+	public void computerAsBlack() {
+		startChessEngine(true);
+	}
+	
+	public void computerAsWhite() {
+		startChessEngine(false);
+	}
+
+	@Override
+	public void fireEventListener() {
+		update();
 	}
 }

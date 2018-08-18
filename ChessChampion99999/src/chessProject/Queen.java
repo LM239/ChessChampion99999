@@ -9,7 +9,12 @@ public class Queen extends advancedChessPiece {
 		charCode = white ? "\u2655" : "\u265B";
 		charRepresentation = "Q";
 		instance = (p -> p instanceof Queen);
-		pieceImg = new Image(chessPiece.class.getResource(white ? "/WQ.png" : "/BQ.png").toExternalForm());
+		try {		
+			pieceImg = new Image(chessPiece.class.getResource(white ? "/WQ.png" : "/BQ.png").toExternalForm());
+		}
+		catch(RuntimeException e) {
+			pieceImg = null;
+		}
 	}
 
 	@Override

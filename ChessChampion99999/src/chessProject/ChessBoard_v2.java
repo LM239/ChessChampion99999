@@ -9,12 +9,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Stack;
 import java.util.function.Predicate;
 
 public class ChessBoard_v2{	
 	private boolean whiteToMove = true;
 	private boolean highlighting  = true;
-	private String summary = "";
+	private String summary = "May the best player\nwin!\n\nWhite to move:\n";
 	private boolean inCheck, mustMoveKing, promotingPawn;
 	private chessPiece[][] chessBoard = new chessPiece[8][8];
 	private chessPiece[][] copyOfBoard = new chessPiece[8][8];
@@ -22,8 +23,17 @@ public class ChessBoard_v2{
 	private final List<List<Set<chessPiece>>> threatBoard = new ArrayList<>();
 	private final Collection<int[]> highlights = new ArrayList<>();
 	private final Map<Pawn, Collection<int[]>> pawnMoves = new HashMap<>();
+	private final Stack<chessPiece[][]> history = new Stack<>();
+	private final Stack<chessPiece> enemyStack = new Stack<>();
+	private final Stack<chessPiece> movedPieceStack = new Stack<>();
+	private final Stack<Boolean> checkStack = new Stack<>();
+	private final Stack<Boolean> mustMoveStack = new Stack<>();
+	private final Stack<Pawn> longMovedStack = new Stack<>();
 	private String moveString = "";
 	private Pawn longMovedPawn;
+	private Boolean engineIsWhite = null;
+	private chessEngine chessEngine;
+	private engineListener listener;
 
 	public ChessBoard_v2() {
 		for (int i = 0; i < 8; i++) {
@@ -34,8 +44,7 @@ public class ChessBoard_v2{
 		}
 		initializeBoard();
 	}
-			
-			
+
 	private void updateBoard(chessPiece piece, int x, int y) {
 		if (piece.legalMove(x,y)) {
 			moveString  = getMoveString(piece,x,y);
@@ -57,6 +66,11 @@ public class ChessBoard_v2{
 			
 			if (piece instanceof Pawn) { 
 				if (y == 7 || y == 0) {
+					if (engineIsWhite == whiteToMove) {
+						chessBoard[x][y] = new Queen(x,y,whiteToMove);
+						finishMove(moveString);
+						return;
+					}
 					chessBoard[x][y] = piece;
 					copyOfBoard = cloneArray(chessBoard);
 					chessBoard = new chessPiece[8][8];
@@ -93,16 +107,16 @@ public class ChessBoard_v2{
 		mustMoveKing = false;
 		whiteToMove = !whiteToMove; 
 		highlighting = true;
-		checkingEnemy = null;
-		updateThreatBoard();
+		checkingEnemy = null;	
+		updateThreatBoard(this.chessBoard);
 		
 		if (longMovedPawn != null && longMovedPawn.isWhitePiece() == whiteToMove) {
 			longMovedPawn.setJustMovedFalse();
 			longMovedPawn = null;
 		}
 		
-		boolean surrounded = surrounded();
-		mustMoveKing = mustMoveKing();
+		boolean surrounded = surrounded(whiteToMove);
+		mustMoveKing = mustMoveKing(whiteToMove, this.chessBoard);
 		
 		if (inCheck) {
 			highlightedPiece = whiteToMove ? whiteKing : blackKing;
@@ -118,7 +132,7 @@ public class ChessBoard_v2{
 				for (chessPiece[] column : chessBoard) {
 					for (chessPiece piece : column) {
 						if (piece != null && piece.isWhitePiece() == whiteToMove && !(piece instanceof King)) {
-							saveHiglights(piece);
+							saveHighlights(piece, this.chessBoard);
 							if (highlights.size() > 0) {
 								highlights.clear();
 								return;
@@ -131,10 +145,24 @@ public class ChessBoard_v2{
 		}
 	}
 	
+
+	public void checkEngine() {
+		if (engineIsWhite != null && engineIsWhite == whiteToMove) {
+			Object[] move = chessEngine.findMove(4, chessBoard, whiteToMove);
+			updateBoard((chessPiece)move[0], (int)move[1], (int)move[2]);
+			if (listener != null) {
+				listener.fireEventListener();
+			}
+		}
+	}
+
 	public chessPiece[][] cloneArray(chessPiece[][] board) {
 	    chessPiece[][] newBoard = new chessPiece[8][8];
 	    for (int i = 0; i < 8; i++) {
-	      newBoard[i] = board[i].clone();
+	    	newBoard[i] = new chessPiece[8];
+	    	for (int o = 0; o < 8; o++) {
+	    		newBoard[i][o] = board[i][o];
+	    	}
 	    }
 	    return newBoard;
 	}
@@ -179,14 +207,13 @@ public class ChessBoard_v2{
 		
 		return result + Character.toString(("abcdefgh".charAt(x))) + Integer.toString(y+1);
 	}
-
-
-	private void updateThreatBoard() {
+	
+	public void updateThreatBoard(chessPiece[][] board) {
 		pawnMoves.clear();
 		threatBoard.stream().forEach(a -> a.stream().forEach(Set::clear));
 		
-		Arrays.stream(this.chessBoard).forEach(x -> Arrays.stream(x).filter(y -> y != null)
-			.forEach(c -> c.placeThreats(this.chessBoard)));
+		Arrays.stream(board).forEach(x -> Arrays.stream(x).filter(y -> y != null)
+			.forEach(c -> c.placeThreats(board)));
 	}
 	
 	public void getInput(int x, int y) {
@@ -195,7 +222,7 @@ public class ChessBoard_v2{
 		}
 		else if (!promotingPawn && chessBoard[x][y] != null && chessBoard[x][y].isWhitePiece() == whiteToMove) {
 			highlights.clear();
-			saveHiglights(chessBoard[x][y]);
+			saveHighlights(chessBoard[x][y], this.chessBoard);
 			highlightedPiece = chessBoard[x][y];
 			highlighting = false;
 		}
@@ -240,7 +267,7 @@ public class ChessBoard_v2{
 		return boardString + "   A B C D E F G H";
 	}
 	
-	public void saveHiglights(chessPiece chessPiece) {
+	public void saveHighlights(chessPiece chessPiece, chessPiece[][] chessBoard) {
 		chessPiece king = whiteToMove ? whiteKing : blackKing;
 		int kingX = king.getXCoordinate();
 		int kingY = king.getYCoordinate();
@@ -335,7 +362,7 @@ public class ChessBoard_v2{
 					}
 				}
 			}
-			if (!((King)king).getHasMoved() && !inCheck) {
+			if (!((King)king).getHasMoved() && !inCheck && !((King)king).hasMovedTest()) {
 				for (int x = -1; x < 2; x+=2) {
 					int index = kingX + x;
 					while(index >= 0 && index < 8) {
@@ -366,6 +393,20 @@ public class ChessBoard_v2{
 				if (chessBoard[finalX][finalY] != null) {
 					if (chessBoard[finalX][finalY] == chessPiece) {
 						clearHorisontal = true;
+					}
+					else if (chessBoard[finalX][finalY] == longMovedPawn && pieceY == kingY && chessBoard[finalX + coefficient][finalY] instanceof Pawn 
+						&& chessBoard[finalX + coefficient][finalY].isWhitePiece() == whiteToMove) {
+						for (int x = finalX + coefficient; x < 8; x += coefficient) {
+							if (x < 0) {break;}
+							chessPiece piece = chessBoard[x][finalY];
+							if (piece != null) {
+								if (piece instanceof Queen || piece instanceof Rook) {
+									int finalerX = x;
+									pawnMoves.get(chessPiece).removeIf(a -> a[0] != finalerX);
+								}
+								else {break;}
+							}						
+						}
 					}
 					break;
 				}
@@ -475,8 +516,8 @@ public class ChessBoard_v2{
 	}
 			
 			
-	protected boolean surrounded() {		
-		chessPiece king = whiteToMove ? whiteKing : blackKing;
+	protected boolean surrounded(boolean isWhiteKing) {		
+		chessPiece king = isWhiteKing ? whiteKing : blackKing;
 		int kingX = king.getXCoordinate();
 		int kingY = king.getYCoordinate();
 		for (int i = kingX - 1; i <= kingX + 1; i++) {
@@ -484,8 +525,8 @@ public class ChessBoard_v2{
 			yloop:
 			for (int o = kingY - 1; o <= kingY + 1; o++) {
 				if (o < 0 || o > 7) {continue yloop;}
-				if ((chessBoard[i][o] == null || chessBoard[i][o].isWhitePiece() != whiteToMove)
-					&& (threatBoard.get(i).get(o).stream().allMatch(p -> p.isWhitePiece() == whiteToMove))) {
+				if ((chessBoard[i][o] == null || chessBoard[i][o].isWhitePiece() != isWhiteKing)
+					&& (threatBoard.get(i).get(o).stream().allMatch(p -> p.isWhitePiece() == isWhiteKing))) {
 					return false;
 				}
 			}
@@ -494,20 +535,20 @@ public class ChessBoard_v2{
 	}
 			
 			
-	protected boolean mustMoveKing() {
-		chessPiece king = whiteToMove ? whiteKing : blackKing;
+	protected boolean mustMoveKing(boolean isWhiteKing, chessPiece[][] board) {
+		chessPiece king = isWhiteKing ? whiteKing : blackKing;
 		Set<chessPiece> kingPosition = threatBoard.get(king.getXCoordinate()).get(king.getYCoordinate());
 			
-		switch(kingPosition.stream().filter(d -> d.isWhitePiece() != whiteToMove).mapToInt(c -> 1).sum()) {
+		switch(kingPosition.stream().filter(d -> d.isWhitePiece() != isWhiteKing).mapToInt(c -> 1).sum()) {
 			case 0 : return false;
 			case 2 : inCheck = true; return true;
 		}
 		inCheck = true;
-		chessPiece enemy = kingPosition.stream().filter(d -> d.isWhitePiece() != whiteToMove).findFirst().get();		
+		chessPiece enemy = kingPosition.stream().filter(d -> d.isWhitePiece() != isWhiteKing).findFirst().get();		
 		this.checkingEnemy = enemy;
 		
 		if (threatBoard.get(enemy.getXCoordinate()).get(enemy.getYCoordinate()).stream()
-			.anyMatch(d -> d.isWhitePiece() == whiteToMove && !(d instanceof King))) 
+			.anyMatch(d -> d.isWhitePiece() == isWhiteKing && !(d instanceof King))) 
 		{return false;}
 		
 		if(Math.abs(king.getXCoordinate() - enemy.getXCoordinate()) <= 1 && Math.abs(king.getYCoordinate() 
@@ -517,10 +558,11 @@ public class ChessBoard_v2{
 		if (enemy == longMovedPawn) {
 			final int finalEnemyX = enemy.getXCoordinate();
 			final int finalEnemyY = enemy.getYCoordinate();
-			return !pawnMoves.entrySet().stream().filter(a -> a.getKey().isWhitePiece() == whiteToMove)
+			return !pawnMoves.entrySet().stream().filter(a -> a.getKey().isWhitePiece() == isWhiteKing)
 				.map(Entry::getValue).anyMatch(b -> b.stream().anyMatch(l ->  l[0] == finalEnemyX &&
-				(finalEnemyX + 1 < 8 && pawnMoves.get(chessBoard[finalEnemyX +1][finalEnemyY]).contains(l)
-				|| finalEnemyX - 1 >= 0 && pawnMoves.get(chessBoard[finalEnemyX -1][finalEnemyY]).contains(l))));
+				(finalEnemyX + 1 < 8 && chessBoard[finalEnemyX +1][finalEnemyY] instanceof Pawn && pawnMoves.get(chessBoard[finalEnemyX +1][finalEnemyY]).contains(l)
+				|| finalEnemyX - 1 >= 0 && chessBoard[finalEnemyX -1][finalEnemyY] instanceof Pawn 
+				&& pawnMoves.get(chessBoard[finalEnemyX -1][finalEnemyY]).contains(l))));
 		}
 		
 		int kingX = king.getXCoordinate();
@@ -537,7 +579,7 @@ public class ChessBoard_v2{
 				final int finalX = dynamicValueWasX ? dynamicValue : kingX;
 				final int finalY = dynamicValueWasX ? kingY : dynamicValue;
 				
-				if (dynamicValueWasX && savingPawnAt(finalX,finalY) || savingPieceAt(finalX, finalY)) {
+				if (dynamicValueWasX && savingPawnAt(finalX,finalY, isWhiteKing) || savingPieceAt(finalX, finalY, isWhiteKing)) {
 					return false;
 				}
 			}			
@@ -548,7 +590,7 @@ public class ChessBoard_v2{
 			while (Math.abs(kingX - enemyX) != 1) {
 				enemyX += coefficientX;
 				enemyY += coefficientY;
-				if (savingPawnAt(enemyX,enemyY) || savingPieceAt(enemyX, enemyY)) {
+				if (savingPawnAt(enemyX,enemyY, isWhiteKing) || savingPieceAt(enemyX, enemyY, isWhiteKing)) {
 					return false;
 				}
 			}
@@ -556,13 +598,49 @@ public class ChessBoard_v2{
 		return true;
 	}
 	
-	private boolean savingPawnAt(int x, int y) {
-		return pawnMoves.entrySet().stream().filter(e -> e.getKey().isWhitePiece()
-				== whiteToMove).map(Entry::getValue).anyMatch(m -> m.stream().anyMatch(a-> a[0] == x && a[1] == y));
+	public Collection<int[]> getHighlightsFor(chessPiece piece, chessPiece[][] board) {
+		updateThreatBoard(board);
+		saveHighlights(piece, board);
+		Collection<int[]> returnCollection = new ArrayList<int[]>(this.highlights);
+		highlights.clear();
+		return returnCollection;
 	}
 	
-	private boolean savingPieceAt(int x, int y) {
-		return threatBoard.get(x).get(y).stream().anyMatch(d -> d.isWhitePiece() == whiteToMove 
+	public void addToPieceStack(chessPiece piece) {
+		movedPieceStack.add(piece);
+	}
+	
+	public void saveMustMoveKing(chessPiece piece, chessPiece[][] board) {
+		mustMoveKing(piece.isWhitePiece(), board);
+	}
+	
+	public void resetThreatBoard() {
+		updateThreatBoard(this.chessBoard);
+	}
+	
+	public void setEngineAs(boolean isWhite) {
+		engineIsWhite  = isWhite;
+		this.chessEngine = new chessEngine(this);
+		if (isWhite == whiteToMove) {
+			Object[] move = chessEngine.findMove(4, this.chessBoard, whiteToMove);
+			updateBoard((chessPiece)move[0], (int)move[1], (int)move[2]);
+			if (listener != null) {
+				listener.fireEventListener();
+			}
+		}
+	}
+	
+	public void setEngineListener(engineListener listener) {
+		this.listener = listener;
+	}
+	
+	private boolean savingPawnAt(int x, int y, boolean isWhiteKing) {
+		return pawnMoves.entrySet().stream().filter(e -> e.getKey().isWhitePiece()
+			== isWhiteKing).map(Entry::getValue).anyMatch(m -> m.stream().anyMatch(a-> a[0] == x && a[1] == y));
+	}
+	
+	private boolean savingPieceAt(int x, int y, boolean isWhiteKing) {
+		return threatBoard.get(x).get(y).stream().anyMatch(d -> d.isWhitePiece() == isWhiteKing 
 			&& !(d instanceof King) && !(d instanceof Pawn && chessBoard[x][y] == null));
 	}
 			
@@ -600,6 +678,28 @@ public class ChessBoard_v2{
 	public chessPiece[][] getBoard() {
 		return this.chessBoard;
 	}
+	
+	public chessPiece[][] undo() {
+		this.chessBoard = history.pop();
+		inCheck = checkStack.pop();
+		mustMoveKing = mustMoveStack.pop();
+		checkingEnemy = enemyStack.pop();
+		longMovedPawn = longMovedStack.pop();
+		try {			
+			movedPieceStack.pop().undoMove();
+		} catch (NullPointerException e) {
+			System.out.println("nullPointerexception linje 681");
+		}
+		return this.chessBoard;
+	}
+	
+	public void saveBoard() {
+		history.add(cloneArray(this.chessBoard));
+		checkStack.add(inCheck);
+		mustMoveStack.add(mustMoveKing);
+		enemyStack.add(checkingEnemy);
+		longMovedStack.add(longMovedPawn);
+	}
 
 	protected void initializeBoard() {
 		chessBoard[3][7] = new Queen(3, 7, false);
@@ -625,6 +725,18 @@ public class ChessBoard_v2{
 			chessBoard[x][0] = new Bishop(x, 0, true);
 		}
 		summary += this.toString() + "\n\n";
-		updateThreatBoard();
+		updateThreatBoard(this.chessBoard);
+		history.add(cloneArray(this.chessBoard));
+		mustMoveStack.add(false);
+		checkStack.add(false);
+		enemyStack.add(null);
+		movedPieceStack.add(null);
+		longMovedStack.add(null);
+	}
+	
+	public static void main(String[] args) {
+		ChessBoard_v2 game = new ChessBoard_v2();
+		game.setEngineAs(true);
+
 	}
 }

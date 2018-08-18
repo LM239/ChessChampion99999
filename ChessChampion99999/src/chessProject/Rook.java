@@ -10,7 +10,12 @@ public class Rook extends advancedChessPiece{
 		charCode = white ? "\u2656" : "\u265C";
 		charRepresentation = "R";
 		instance = (p -> p instanceof Rook);
-		pieceImg = new Image(chessPiece.class.getResource(white ? "/WR.png" : "/BR.png").toExternalForm());
+		try {		
+			pieceImg = new Image(chessPiece.class.getResource(white ? "/WR.png" : "/BR.png").toExternalForm());
+		}
+		catch(RuntimeException e) {
+			pieceImg = null;
+		}
 	}
 
 	@Override

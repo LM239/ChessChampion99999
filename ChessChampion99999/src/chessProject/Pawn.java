@@ -15,7 +15,12 @@ public class Pawn extends chessPiece{
 		coefficient = white ? 1 : -1;
 		charRepresentation = "P";
 		instance = (p -> p instanceof Pawn);
-		pieceImg = new Image(chessPiece.class.getResource(white ? "/WP.png" : "/BP.png").toExternalForm());
+		try {		
+			pieceImg = new Image(chessPiece.class.getResource(white ? "/WP.png" : "/BP.png").toExternalForm());
+		}
+		catch(RuntimeException e) {
+			pieceImg = null;
+		}
 	}
 
 	@Override
@@ -35,18 +40,18 @@ public class Pawn extends chessPiece{
 	
 	private void placePawnMoves() {
 		Collection<int[]> coordinates = new ArrayList<>();
-		if (chessBoard.getPiece(xCoordinate,yCoordinate + coefficient) == null) {
-			coordinates.add(new int[] {xCoordinate, yCoordinate + coefficient});
+		if (chessBoard.getPiece(this.xCoordinate,this.yCoordinate + coefficient) == null) {
+			coordinates.add(new int[] {this.xCoordinate, this.yCoordinate + coefficient});
 			
-			if (this.yCoordinate == (white ? 1 : 6) && chessBoard.getPiece(xCoordinate,yCoordinate + 2*coefficient) == null) {
-				coordinates.add(new int[] {xCoordinate, yCoordinate + 2*coefficient});
+			if (this.yCoordinate == (white ? 1 : 6) && chessBoard.getPiece(this.xCoordinate,this.yCoordinate + 2*coefficient) == null) {
+				coordinates.add(new int[] {this.xCoordinate, this.yCoordinate + 2*coefficient});
 			}
 		}
-		for (int x = -1; x < 2; x+= 2 ) {
-			if (this.xCoordinate + x >= 0 && this.xCoordinate + x <= 7) {
-				chessPiece targetPiece = chessBoard.getPiece(this.xCoordinate + x,yCoordinate);
+		for (int i = -1; i < 2; i+= 2 ) {
+			if (this.xCoordinate + i >= 0 && this.xCoordinate + i <= 7) {
+				chessPiece targetPiece = chessBoard.getPiece(this.xCoordinate + i,this.yCoordinate);
 				if (targetPiece instanceof Pawn && ((Pawn)targetPiece).getJustMovedLong())  {
-					coordinates.add(new int[] {this.xCoordinate + x, yCoordinate + coefficient});
+					coordinates.add(new int[] {this.xCoordinate + i, this.yCoordinate + coefficient});
 				}	
 			}
 		}

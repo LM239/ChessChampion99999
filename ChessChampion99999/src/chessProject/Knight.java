@@ -9,7 +9,12 @@ public class Knight extends chessPiece {
 		charCode = white ? "\u2658" : "\u265E";
 		charRepresentation = "N";
 		instance = (p -> p instanceof Knight);
-		pieceImg = new Image(chessPiece.class.getResource(white ? "/WN.png" : "/BN.png").toExternalForm());
+		try {		
+			pieceImg = new Image(chessPiece.class.getResource(white ? "/WN.png" : "/BN.png").toExternalForm());
+		}
+		catch(RuntimeException e) {
+			pieceImg = null;
+		}
 	}
 	
 

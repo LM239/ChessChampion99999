@@ -8,7 +8,12 @@ public class Bishop extends advancedChessPiece {
 		charCode = white ? "\u2657" : "\u265D";
 		charRepresentation = "B";
 		instance = (p -> p instanceof Bishop);
-		pieceImg = new Image(chessPiece.class.getResource(white ? "/WB.png" : "/BB.png").toExternalForm());
+		try {		
+			pieceImg = new Image(chessPiece.class.getResource(white ? "/WB.png" : "/BB.png").toExternalForm());
+		}
+		catch(RuntimeException e) {
+			pieceImg = null;
+		}
 	}
 
 	@Override

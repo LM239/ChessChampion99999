@@ -4,13 +4,19 @@ import javafx.scene.image.Image;
 
 public class King extends chessPiece {
 	private boolean hasMoved = false;
+	private boolean hasMovedTest = false;
 
 	public King(int x, int y, boolean white, ChessBoard_v2 chessBoard_v2) {
 		super(x, y, white, chessBoard_v2);
 		charCode = white ? "\u2654" : "\u265A";
 		charRepresentation = "K";
 		instance = (p -> p instanceof King);
-		pieceImg = new Image(chessPiece.class.getResource(white ? "/WK.png" : "/BK.png").toExternalForm());
+		try {		
+			pieceImg = new Image(chessPiece.class.getResource(white ? "/WK.png" : "/BK.png").toExternalForm());
+		}
+		catch(RuntimeException e) {
+			pieceImg = null;
+		}
 	}
 
 	@Override
@@ -38,6 +44,14 @@ public class King extends chessPiece {
 	
 	public boolean getHasMoved() {
 		return this.hasMoved;
+	}
+
+	public boolean hasMovedTest() {
+		return hasMovedTest ;
+	}
+	
+	public void setHasMovedTest(boolean value) {
+		hasMovedTest = value;
 	}
 	
 }
