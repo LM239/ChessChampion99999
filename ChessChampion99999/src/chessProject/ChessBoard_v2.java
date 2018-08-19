@@ -393,13 +393,27 @@ public class ChessBoard_v2{
 				if (chessBoard[finalX][finalY] != null) {
 					if (chessBoard[finalX][finalY] == chessPiece) {
 						clearHorisontal = true;
+						if (longMovedPawn != null && chessBoard[finalX + coefficient][finalY] == longMovedPawn && pieceY == kingY && chessPiece instanceof Pawn) {
+							clearHorisontal = false;
+							for (int x = longMovedPawn.getXCoordinate() + coefficient; x < 8; x += coefficient) {
+								if (x < 0) {break;}
+								chessPiece piece = chessBoard[x][finalY];
+								if (piece != null) {
+									if ((piece instanceof Queen || piece instanceof Rook) && piece.isWhitePiece() != whiteToMove) {
+										pawnMoves.get(chessPiece).removeIf(a -> a[0] != chessPiece.getXCoordinate());
+									}
+									else {break;}
+								}						
+							}
+						}
+						clearHorisontal = true;
 					}
 					else if (chessBoard[finalX][finalY] == longMovedPawn && pieceY == kingY && chessBoard[finalX + coefficient][finalY] == chessPiece && chessPiece instanceof Pawn) {
 						for (int x = pieceX + coefficient; x < 8; x += coefficient) {
 							if (x < 0) {break;}
 							chessPiece piece = chessBoard[x][finalY];
 							if (piece != null) {
-								if (piece instanceof Queen || piece instanceof Rook) {
+								if ((piece instanceof Queen || piece instanceof Rook) && piece.isWhitePiece() != whiteToMove) {
 									pawnMoves.get(chessPiece).removeIf(a -> a[0] != chessPiece.getXCoordinate());
 								}
 								else {break;}
