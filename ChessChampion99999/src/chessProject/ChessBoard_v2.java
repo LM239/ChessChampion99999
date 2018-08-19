@@ -730,6 +730,7 @@ public class ChessBoard_v2{
 		enemyStack.add(null);
 		movedPieceStack.add(null);
 		longMovedStack.add(null);
+		//nothing
 	}
 	
 }
