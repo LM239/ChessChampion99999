@@ -22,14 +22,15 @@ public class chessEngine {
 			char c = s.charAt(i);	 
 			Scanner scanner = null;
 			try {
-				scanner = new Scanner(new File(chessEngine.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(0,70) + c + ".txt"));
+				String file = chessEngine.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+				scanner = new Scanner(new File(file.substring(0, file.length() - 22) + c + ".txt"));
 			} 
-			catch (FileNotFoundException | StringIndexOutOfBoundsException e) {
-				e.printStackTrace();
+			catch (FileNotFoundException | StringIndexOutOfBoundsException a) {
 				try {
 					scanner = new Scanner(new File(chessEngine.class.getResource("/" + c + ".txt").toURI()));
-				} catch (FileNotFoundException | URISyntaxException e1) {
-					e1.printStackTrace();
+				} catch (FileNotFoundException | URISyntaxException e) {
+					a.printStackTrace();
+					e.printStackTrace();
 					System.exit(1);;
 				}
 			}
