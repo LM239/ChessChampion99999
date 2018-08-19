@@ -406,7 +406,6 @@ public class ChessBoard_v2{
 								}						
 							}
 						}
-						clearHorisontal = true;
 					}
 					else if (chessBoard[finalX][finalY] == longMovedPawn && pieceY == kingY && chessBoard[finalX + coefficient][finalY] == chessPiece && chessPiece instanceof Pawn) {
 						for (int x = pieceX + coefficient; x < 8; x += coefficient) {
