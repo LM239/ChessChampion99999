@@ -394,9 +394,8 @@ public class ChessBoard_v2{
 					if (chessBoard[finalX][finalY] == chessPiece) {
 						clearHorisontal = true;
 					}
-					else if (chessBoard[finalX][finalY] == longMovedPawn && pieceY == kingY && chessBoard[finalX + coefficient][finalY] instanceof Pawn 
-						&& chessBoard[finalX + coefficient][finalY].isWhitePiece() == whiteToMove) {
-						for (int x = finalX + coefficient; x < 8; x += coefficient) {
+					else if (chessBoard[finalX][finalY] == longMovedPawn && pieceY == kingY && chessBoard[finalX + coefficient][finalY] == chessPiece) {
+						for (int x = pieceX + coefficient; x < 8; x += coefficient) {
 							if (x < 0) {break;}
 							chessPiece piece = chessBoard[x][finalY];
 							if (piece != null) {
