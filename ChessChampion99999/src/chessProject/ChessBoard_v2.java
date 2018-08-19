@@ -402,7 +402,7 @@ public class ChessBoard_v2{
 							if (piece != null) {
 								if (piece instanceof Queen || piece instanceof Rook) {
 									int finalerX = x;
-									pawnMoves.get(chessPiece).removeIf(a -> a[0] != finalerX);
+									pawnMoves.get(chessPiece).removeIf(a -> a[0] != chessPiece.getXCoordinate());
 								}
 								else {break;}
 							}						
@@ -734,9 +734,4 @@ public class ChessBoard_v2{
 		longMovedStack.add(null);
 	}
 	
-	public static void main(String[] args) {
-		ChessBoard_v2 game = new ChessBoard_v2();
-		game.setEngineAs(true);
-
-	}
 }
