@@ -16,7 +16,7 @@ public class ChessBoard_v2{
 	private boolean whiteToMove = true;
 	private boolean highlighting  = true;
 	private String summary = "May the best player\nwin!\n\nWhite to move:\n";
-	private boolean inCheck, mustMoveKing, promotingPawn;
+	private boolean inCheck, mustMoveKing, promotingPawn, twoEnemies;
 	private chessPiece[][] chessBoard = new chessPiece[8][8];
 	private chessPiece[][] copyOfBoard = new chessPiece[8][8];
 	private chessPiece checkingEnemy, highlightedPiece , promotingPiece, whiteKing, blackKing;
@@ -107,7 +107,8 @@ public class ChessBoard_v2{
 		mustMoveKing = false;
 		whiteToMove = !whiteToMove; 
 		highlighting = true;
-		checkingEnemy = null;	
+		checkingEnemy = null;
+		twoEnemies = false;
 		updateThreatBoard(this.chessBoard);
 		
 		if (longMovedPawn != null && longMovedPawn.isWhitePiece() == whiteToMove) {
@@ -282,15 +283,28 @@ public class ChessBoard_v2{
 				}
 			}
 			if (chessPiece instanceof King) {
+				chessPiece enemyNrTwo = null;
+				int enemyX2 = 0;
+				int enemyY2 = 0;
+				if (twoEnemies) {
+					enemyNrTwo = threatBoard.get(kingX).get(kingY).stream().filter(d -> d != checkingEnemy && d.isWhitePiece() != whiteToMove).findFirst().get();
+					enemyX2 = enemyNrTwo.getXCoordinate();
+					enemyY2 = enemyNrTwo.getYCoordinate();
+				}
 				for (int x = kingX - 1; x <= kingX + 1; x++) {
 					if (x < 0 || x > 7) {continue;}
 					yloop:
 					for (int y = kingY - 1; y <= kingY + 1; y++) {
-						if (y < 0 || y > 7 || (y == kingY && enemyY == kingY && x != enemyX) ||
+						if (y < 0 || y > 7 || ((y == kingY && enemyY == kingY && x != enemyX) ||
 							(x == kingX && enemyX == kingX && y != enemyY) ||
 							Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)
 							&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
-							&& !(x == enemyX && y == enemyY)) {continue yloop;}
+							&& !(x == enemyX && y == enemyY) && !(checkingEnemy instanceof Pawn)) || (enemyNrTwo != null 
+							&& ((y == kingY && enemyY2 == kingY && x != enemyX2) ||
+							(x == kingX && enemyX2 == kingX && y != enemyY2) ||
+							Math.abs(enemyX2 - kingX) == Math.abs(enemyY2 - kingY)
+							&& Math.abs(enemyX2 - x) == Math.abs(enemyY2 - y)
+							&& !(x == enemyX2 && y == enemyY2) && !(enemyNrTwo instanceof Pawn)))) {continue yloop;}
 						
 						if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != whiteToMove)
 							&& threatBoard.get(x).get(y).stream().allMatch(p-> p.isWhitePiece() == whiteToMove))
@@ -552,7 +566,7 @@ public class ChessBoard_v2{
 			
 		switch(kingPosition.stream().filter(d -> d.isWhitePiece() != isWhiteKing).mapToInt(c -> 1).sum()) {
 			case 0 : return false;
-			case 2 : inCheck = true; return true;
+			case 2 : twoEnemies = true; inCheck = true; this.checkingEnemy = kingPosition.stream().filter(d -> d.isWhitePiece() != isWhiteKing).findFirst().get(); return true;
 		}
 		inCheck = true;
 		chessPiece enemy = kingPosition.stream().filter(d -> d.isWhitePiece() != isWhiteKing).findFirst().get();		
