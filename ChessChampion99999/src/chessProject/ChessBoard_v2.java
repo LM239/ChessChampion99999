@@ -394,13 +394,12 @@ public class ChessBoard_v2{
 					if (chessBoard[finalX][finalY] == chessPiece) {
 						clearHorisontal = true;
 					}
-					else if (chessBoard[finalX][finalY] == longMovedPawn && pieceY == kingY && chessBoard[finalX + coefficient][finalY] == chessPiece) {
+					else if (chessBoard[finalX][finalY] == longMovedPawn && pieceY == kingY && chessBoard[finalX + coefficient][finalY] == chessPiece && chessPiece instanceof Pawn) {
 						for (int x = pieceX + coefficient; x < 8; x += coefficient) {
 							if (x < 0) {break;}
 							chessPiece piece = chessBoard[x][finalY];
 							if (piece != null) {
 								if (piece instanceof Queen || piece instanceof Rook) {
-									int finalerX = x;
 									pawnMoves.get(chessPiece).removeIf(a -> a[0] != chessPiece.getXCoordinate());
 								}
 								else {break;}
