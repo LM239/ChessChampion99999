@@ -2,6 +2,7 @@ package chessProject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,25 +19,29 @@ public class chessEngine {
 		this.game = game;
 		String s = "BKNPQR";
 		for (int i = 0; i < s.length(); i++){
-		char c = s.charAt(i);
-		File file = new File(chessEngine.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "/" + c + ".txt");
-	 
-	Scanner scanner = null;
+			char c = s.charAt(i);	 
+			Scanner scanner = null;
 			try {
-				scanner = new Scanner(file);
-			} catch (FileNotFoundException e) {
+				scanner = new Scanner(new File(chessEngine.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(0,70) + c + ".txt"));
+			} 
+			catch (FileNotFoundException | StringIndexOutOfBoundsException e) {
 				e.printStackTrace();
-				System.exit(1);
+				try {
+					scanner = new Scanner(new File(chessEngine.class.getResource("/" + c + ".txt").toURI()));
+				} catch (FileNotFoundException | URISyntaxException e1) {
+					e1.printStackTrace();
+					System.exit(1);;
+				}
 			}
-	String[] values = scanner.next().trim().split(",");
-	Double[][] result = new Double[8][8];
-	for (int y = 0; y < 8; y++) {
-		for (int x = 0; x < 8; x++) {
-			result[y][x] = Double.valueOf(values[7*y + x].trim());
-		}
-	}
-	scanner.close();
-	posValues.put(c, result);
+			String[] values = scanner.next().trim().split(",");
+			Double[][] result = new Double[8][8];
+			for (int y = 0; y < 8; y++) {
+				for (int x = 0; x < 8; x++) {
+					result[y][x] = Double.valueOf(values[7*y + x].trim());
+				}
+			}
+			scanner.close();
+			posValues.put(c, result);
 		}
 	}
 	
