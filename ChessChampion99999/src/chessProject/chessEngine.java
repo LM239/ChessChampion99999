@@ -25,6 +25,7 @@ public class chessEngine {
 			try {
 				scanner = new Scanner(file);
 			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 				System.exit(1);
 			}
 	String[] values = scanner.next().trim().split(",");
@@ -68,7 +69,7 @@ public class chessEngine {
 		if (depthleft == 0) { 
 			return evaluateBoard(board, !playAsWhite);
 		}
-		Map<chessPiece, Collection<int[]>> possibleMoves = getPossibleMoves(board, playAsWhite);
+		Map<chessPiece, Collection<int[]>> possibleMoves = getPossibleMoves(board, !playAsWhite);
 		for (Entry<chessPiece, Collection<int[]>> pieceEntry : possibleMoves.entrySet()) {
 			for (int[] move : pieceEntry.getValue()) {
 				chessPiece piece = pieceEntry.getKey();
@@ -93,12 +94,12 @@ public class chessEngine {
 		if (depthleft == 0) {
 			return -evaluateBoard(board, playAsWhite);
 		}
-		Map<chessPiece, Collection<int[]>> possibleMoves = getPossibleMoves(board, playAsWhite);
+		Map<chessPiece, Collection<int[]>> possibleMoves = getPossibleMoves(board, !playAsWhite);
 		for (Entry<chessPiece, Collection<int[]>> pieceEntry : possibleMoves.entrySet()) {
 			for (int[] move : pieceEntry.getValue()) {
 				chessPiece piece = pieceEntry.getKey();
 				makeMove(board, piece, move);
-				double score = alphaBetaMax(alpha, beta, depthleft - 1, board, !playAsWhite);
+				double score = alphaBetaMax(alpha, beta, depthleft - 1, board, playAsWhite);
 				board = game.undo();
 				if (piece instanceof King) {
 					((King)piece).setHasMovedTest(kingMoved.pop());

@@ -29,6 +29,7 @@ public class ChessBoard_v2{
 	private final Stack<Boolean> checkStack = new Stack<>();
 	private final Stack<Boolean> mustMoveStack = new Stack<>();
 	private final Stack<Pawn> longMovedStack = new Stack<>();
+	private final Stack<Boolean> twoEnemiesStack = new Stack<>();
 	private String moveString = "";
 	private Pawn longMovedPawn;
 	private Boolean engineIsWhite = null;
@@ -287,6 +288,7 @@ public class ChessBoard_v2{
 				int enemyX2 = 0;
 				int enemyY2 = 0;
 				if (twoEnemies) {
+					System.out.println(this.toString());
 					enemyNrTwo = threatBoard.get(kingX).get(kingY).stream().filter(d -> d != checkingEnemy && d.isWhitePiece() != whiteToMove).findFirst().get();
 					enemyX2 = enemyNrTwo.getXCoordinate();
 					enemyY2 = enemyNrTwo.getYCoordinate();
@@ -707,6 +709,7 @@ public class ChessBoard_v2{
 	public chessPiece[][] undo() {
 		this.chessBoard = history.pop();
 		inCheck = checkStack.pop();
+		twoEnemies = twoEnemiesStack.pop();
 		mustMoveKing = mustMoveStack.pop();
 		checkingEnemy = enemyStack.pop();
 		longMovedPawn = longMovedStack.pop();
@@ -719,6 +722,7 @@ public class ChessBoard_v2{
 	}
 	
 	public void saveBoard() {
+		twoEnemiesStack.add(twoEnemies);
 		history.add(cloneArray(this.chessBoard));
 		checkStack.add(inCheck);
 		mustMoveStack.add(mustMoveKing);
@@ -757,6 +761,7 @@ public class ChessBoard_v2{
 		enemyStack.add(null);
 		movedPieceStack.add(null);
 		longMovedStack.add(null);
+		twoEnemiesStack.add(false);
 	}
 	
 }
