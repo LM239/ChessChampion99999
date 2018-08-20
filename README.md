@@ -11,7 +11,9 @@ Download the engineLauncher.zip file and extract this into your preferred locati
 
 **DO NOT :**
   -Change any filenames - including fileindexes such as file.txt (1).
+  
   -Move any files
+  
   -Use special characters (([]&% *Space* ...) in **ANY** folder in the directory you choose 
    to extract into
   
