@@ -10,7 +10,7 @@ If you also want to try to play against the chess-engine do the folowing:
 Download the engineLauncher.zip file and extract this into your preferred location
 
 **DO NOT :**
-  -Change any filenames - including fileindexes such as file.txt (1).
+  -Change any filenames, including fileindexes such as file.txt (1).
   
   -Move any files
   
