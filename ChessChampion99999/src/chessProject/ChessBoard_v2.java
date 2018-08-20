@@ -117,8 +117,8 @@ public class ChessBoard_v2{
 			longMovedPawn = null;
 		}
 		
-		boolean surrounded = surrounded(whiteToMove);
 		mustMoveKing = mustMoveKing(whiteToMove, this.chessBoard);
+		boolean surrounded = surrounded(whiteToMove);
 		
 		if (inCheck) {
 			highlightedPiece = whiteToMove ? whiteKing : blackKing;
@@ -547,13 +547,44 @@ public class ChessBoard_v2{
 		chessPiece king = isWhiteKing ? whiteKing : blackKing;
 		int kingX = king.getXCoordinate();
 		int kingY = king.getYCoordinate();
-		for (int i = kingX - 1; i <= kingX + 1; i++) {
-			if(i < 0 || i > 7) {continue;}
+		for (int x = kingX - 1; x <= kingX + 1; x++) {
+			if(x < 0 || x > 7) {continue;}
 			yloop:
-			for (int o = kingY - 1; o <= kingY + 1; o++) {
-				if (o < 0 || o > 7) {continue yloop;}
-				if ((chessBoard[i][o] == null || chessBoard[i][o].isWhitePiece() != isWhiteKing)
-					&& (threatBoard.get(i).get(o).stream().allMatch(p -> p.isWhitePiece() == isWhiteKing))) {
+			for (int y = kingY - 1; y <= kingY + 1; y++) {
+				if (y < 0 || y > 7) {continue yloop;}
+				if ((chessBoard[x][y] == null || chessBoard[x][y].isWhitePiece() != isWhiteKing)
+					&& (threatBoard.get(x).get(y).stream().allMatch(p -> p.isWhitePiece() == isWhiteKing))) {
+					int enemyX = 0;
+					int enemyY = 0;
+					int enemyX2 = 0;
+					int enemyY2 = 0;
+					chessPiece enemyNrTwo = null;
+					if (checkingEnemy != null) {
+						enemyX = checkingEnemy.getXCoordinate();
+						enemyY = checkingEnemy.getYCoordinate();
+						
+						if (twoEnemies) {
+							enemyNrTwo = threatBoard.get(kingX).get(kingY).stream().filter(a -> a != checkingEnemy && a.isWhitePiece() != king.isWhitePiece()).findFirst().get();
+							enemyX2 = enemyNrTwo.getXCoordinate();
+							enemyY2 = enemyNrTwo.getYCoordinate();
+						}
+					}
+					else {
+						return false;
+					}
+					
+					if (((x == kingX && enemyX == kingX && y != enemyY) ||
+						Math.abs(enemyX - kingX) == Math.abs(enemyY - kingY)
+						&& Math.abs(enemyX - x) == Math.abs(enemyY - y)
+						&& !(x == enemyX && y == enemyY) && !(checkingEnemy instanceof Pawn)) || (enemyNrTwo != null 
+						&& ((y == kingY && enemyY2 == kingY && x != enemyX2) ||
+						(x == kingX && enemyX2 == kingX && y != enemyY2) ||
+						Math.abs(enemyX2 - kingX) == Math.abs(enemyY2 - kingY)
+						&& Math.abs(enemyX2 - x) == Math.abs(enemyY2 - y)
+						&& !(x == enemyX2 && y == enemyY2) && !(enemyNrTwo instanceof Pawn)))) 
+					{
+						continue yloop;	
+					}
 					return false;
 				}
 			}
