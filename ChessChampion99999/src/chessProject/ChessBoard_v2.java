@@ -67,7 +67,7 @@ public class ChessBoard_v2{
 			
 			if (piece instanceof Pawn) { 
 				if (y == 7 || y == 0) {
-					if (engineIsWhite == whiteToMove) {
+					if (engineIsWhite != null && engineIsWhite == whiteToMove) {
 						chessBoard[x][y] = new Queen(x,y,whiteToMove);
 						finishMove(moveString);
 						return;
