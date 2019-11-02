@@ -46,7 +46,7 @@ public class GUIController_v2 implements engineListener{
 			for (int x = 0; x < 8; x++) {
 				chessPiece piece = game.getBoard()[x][y];
 				((ImageView) chessGame.lookup("#i" + String.valueOf(x) + String.valueOf(y)))
-				.setImage(piece == null ? null : piece.getImage());	
+				.setImage(piece == null ? null : piece.getImage());
 			}
 		}
 		game.checkEngine();
@@ -99,6 +99,12 @@ public class GUIController_v2 implements engineListener{
 			chessGame.lookup("#" + String.valueOf(piece[0]) + String.valueOf(piece[1]))
 			.setStyle("-fx-background-color: LIGHTPINK");
 		}
+	}
+
+	@FXML
+	private void resetBoard() {
+		highlight = true;
+		initialize();
 	}
 	
 	private void startChessEngine(boolean isWhite) {

@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox alignment="CENTER" prefHeight="536.0" prefWidth="760.0" spacing="15" style="-fx-padding: 10px 10px 10px 10px" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chessProject.GUIController_v2">
+<HBox alignment="CENTER" prefHeight="536.0" prefWidth="780.0" spacing="15" style="-fx-padding: 10px 10px 10px 10px" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chessProject.GUIController_v2">
    <children>
     <AnchorPane fx:id="chessGame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="516.0" prefWidth="516.0" style="-fx-background-color: BLACK;">
          <children>
@@ -303,31 +303,36 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="516.0" prefWidth="201.0">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="515.0" prefWidth="228.0">
          <children>
-            <TextArea fx:id="summaryField" editable="false" layoutX="-2.0" layoutY="75.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="383.0" prefWidth="206.0">
+            <TextArea fx:id="summaryField" editable="false" layoutX="-2.0" layoutY="75.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="383.0" prefWidth="228.0">
                <font>
                   <Font size="17.0" />
                </font>
             </TextArea>
-            <Button fx:id="highlightToggle" layoutX="-2.0" layoutY="464.0" mnemonicParsing="false" onAction="#toggleHighlights" prefHeight="51.0" prefWidth="205.0" text="Switch highlight[OFF]">
+            <Button fx:id="highlightToggle" layoutX="-2.0" layoutY="464.0" mnemonicParsing="false" onAction="#toggleHighlights" prefHeight="51.0" prefWidth="228.0" text="Switch highlight[OFF]">
                <font>
                   <Font size="19.0" />
                </font>
             </Button>
-            <Text layoutX="-2.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Continue against computer as:" wrappingWidth="201.59999787807465">
+            <Text layoutX="34.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Continue against computer as:" wrappingWidth="201.59999787807465">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
-            <Button layoutX="-2.0" layoutY="29.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="97.0" text="Black" onAction="#computerAsBlack">
+            <Button layoutX="-1.0" layoutY="29.0" mnemonicParsing="false" onAction="#computerAsBlack" prefHeight="39.0" prefWidth="112.0" text="Black">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button layoutX="106.0" layoutY="29.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="97.0" text="White" onAction="#computerAsWhite">
+            <Button layoutX="114.0" layoutY="29.0" mnemonicParsing="false" onAction="#computerAsWhite" prefHeight="39.0" prefWidth="112.0" text="White">
                <font>
                   <Font size="14.0" />
+               </font>
+            </Button>
+            <Button layoutX="-1.0" layoutY="-10.0" mnemonicParsing="false" onAction="#resetBoard" prefHeight="19.0" prefWidth="30.0" text="↺">
+               <font>
+                  <Font size="16.0" />
                </font>
             </Button>
          </children>

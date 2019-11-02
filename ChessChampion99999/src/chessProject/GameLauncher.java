@@ -21,7 +21,7 @@ public class GameLauncher extends Application{
 	}
 	
 	public GameLauncher() {
-		icon = new Image(GameLauncher.class.getResource("/knighticon.png").toExternalForm());
+		//icon = new Image(GameLauncher.class.getResource("/knighticon.png").toExternalForm());
 	}
 	
 	@Override 
@@ -30,7 +30,7 @@ public class GameLauncher extends Application{
 		Pane root = (Pane) loader.load();
 		
 		Scene scene = new Scene(new Group(root));
-		stage.getIcons().add(icon);
+		//stage.getIcons().add(icon);
 		stage.setTitle("ChessMaster9001");
 		stage.setScene(scene);
 		stage.show();
